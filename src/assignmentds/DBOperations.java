@@ -1,0 +1,113 @@
+package assignmentds;
+
+import java.sql.*;
+import java.util.Properties;
+
+public class DBOperations {
+
+    private static String url = "jdbc:mysql://127.0.0.1:3306/login_schema"; //url format is jdbc:mysql://<database number>/<database name>
+    private static String DBuser = "root"; //user usually is "root"
+    private static String pw = "password"; //your password
+
+
+    public static boolean addUserToDB(User newUser) {
+        String sql = "INSERT INTO login_schema.users (email, username, password, salt, role, locationCoordinate_X, locationCoordinate_Y) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(url, DBuser, pw);
+             PreparedStatement statement = connection.prepareStatement(sql);){
+
+            if (AuthenticationSystem.isIdentifierRegistered(connection, newUser.getEmail())) {
+                System.out.println("---------------------------------------------");
+                System.out.println("Email has already been registered");
+                System.out.println("---------------------------------------------");
+                return false;
+
+            } else {
+                statement.setString(1, newUser.getEmail());
+                statement.setString(2, newUser.getUsername());
+                statement.setString(3, newUser.getPassword());
+                statement.setBytes(4, newUser.getSalt());
+                statement.setInt(5, newUser.getRole());
+                statement.setObject(6, newUser.getLocationCoordinate().getLatitude());
+                statement.setObject(7, newUser.getLocationCoordinate().getLongitude());
+
+                // Execute the statement
+                int rowsInserted = statement.executeUpdate(); // returns the number of rows affected by the execution, should be 1 if the insertion was successful
+                return (rowsInserted > 0);
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    public static ResultSet getUserDetailsSet(String identifier) throws SQLException {
+        String query;
+
+        //check if the identifier is email
+        if (identifier.contains("@")) {
+            query = "SELECT * FROM login_schema.users WHERE email = ?";
+        } else {
+            query = "SELECT * FROM login_schema.users WHERE username = ?";
+        }
+
+        return getUserDetails(query, identifier);
+    }
+
+    private static ResultSet getUserDetails(String query, String identifier) throws SQLException {
+        Connection connection = DriverManager.getConnection(url, DBuser, pw);
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, identifier);
+
+            return preparedStatement.executeQuery();
+        }
+    }
+
+    public static ResultSet getUserDetailsSet(String email, String password) throws SQLException {
+        String query = "SELECT * FROM login_schema.users where email = ? AND password = ?";
+
+        return getUserDetails(query, email, password);
+    }
+
+    private static ResultSet getUserDetails(String query, String email, String password) throws SQLException{
+        Connection connection = DriverManager.getConnection(url, DBuser, pw);
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+
+            return preparedStatement.executeQuery();
+        }
+    }
+
+    public static boolean updateCurrentPoints(String email, int newPoints){
+        String sql = "UPDATE users SET currentPoints = ? WHERE email = ?";
+
+        try (Connection connection = DriverManager.getConnection(url, DBuser, pw);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, newPoints);
+            statement.setString(2, email);
+
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0; // Return true if the update was successful
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+//        Usage Example:
+//        boolean success = updateUserPoints("user@example.com", 100);
+//        if (success) {
+//            System.out.println("Points updated successfully.");
+//        } else {
+//            System.out.println("Failed to update points.");
+//        }
+
+    }
+
+
+}

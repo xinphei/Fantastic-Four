@@ -1,0 +1,97 @@
+package assignmentds;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class CreateQuiz {
+    
+    private static int numQuizCreated = 0;
+    
+    private static final String[] VALID_THEMES = {"Science", "Technology", "Engineering", "Mathematics"};
+
+    public static int getNumQuizzesCreated() {
+        return numQuizCreated;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("   ___               _           ____       _         ___                   \n" +
+                "  / __\\ __ ___  __ _| |_ ___    /___ \\_   _(_)____   / _ \\__ _  __ _  ___ _ \n" +
+                " / / | '__/ _ \\/ _` | __/ _ \\  //  / / | | | |_  /  / /_)/ _` |/ _` |/ _ (_)\n" +
+                "/ /__| | |  __/ (_| | ||  __/ / \\_/ /| |_| | |/ /  / ___/ (_| | (_| |  __/_ \n" +
+                "\\____/_|  \\___|\\__,_|\\__\\___| \\___,_\\ \\__,_|_/___| \\/    \\__,_|\\__, |\\___(_)\n" +
+                "                                                               |___/        ");
+
+        Quiz.initializeQuiz();
+        Scanner sc = new Scanner(System.in);
+        boolean createAnotherQuiz = true;
+
+        while (createAnotherQuiz) {
+            // Prompt user for quiz information
+            System.out.println("What's the title of the quiz? ");
+            String title = sc.nextLine();
+
+            System.out.println("What's the description of the quiz? ");
+            String description = sc.nextLine();
+
+            String theme = null;
+            boolean validTheme = false;
+            while (!validTheme) {
+                System.out.println("What's the theme of the quiz? (Science, Technology, Engineering, Mathematics)");
+                theme = sc.nextLine();
+                validTheme = isValidTheme(theme);
+                if (!validTheme) {
+                    System.out.println("Invalid theme. Please enter one of the following: Science, Technology, Engineering, Mathematics");
+                }
+            }
+
+            String quizizzLink = null;
+            boolean validLink = false;
+            while (!validLink) {
+                System.out.println("What's the Quizizz link? ");
+                quizizzLink = sc.nextLine();
+                validLink = isValidURL(quizizzLink);
+                if (!validLink) {
+                    System.out.println("Invalid URL format for Quizizz link. Please enter a valid URL.");
+                }
+            }
+            Quiz newQuiz = new Quiz(title, description, theme, quizizzLink);
+            Quiz.addQuiz(newQuiz);
+            
+            numQuizCreated++;
+
+            System.out.println(" __                              __       _ _                             _           _   _ \n" +
+                    "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    ___ _ __ ___  __ _| |_ ___  __| | / \\\n" +
+                    "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / __| '__/ _ \\/ _` | __/ _ \\/ _` |/  /\n" +
+                    "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | | (__| | |  __/ (_| | ||  __/ (_| /\\_/ \n" +
+                    "\\__/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, |  \\___|_|  \\___|\\__,_|\\__\\___|\\__,_\\/   \n" +
+                    "                                              |___/                                         \n");
+            System.out.println(Quiz.getQuizzes().get(Quiz.getQuizzes().size() - 1).toString());
+
+            // Ask if the user wants to create another quiz
+            System.out.println("Do you want to create another quiz? (yes/no): ");
+            String input = sc.nextLine();
+            createAnotherQuiz = input.equalsIgnoreCase("yes");
+        }
+        sc.close();
+    }
+
+    private static boolean isValidTheme(String theme) {
+        for (String validTheme : VALID_THEMES) {
+            if (validTheme.equalsIgnoreCase(theme)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isValidURL(String url) {
+        // Regular expression to match common URL patterns
+        String regex = "^((https?|ftp|smtp):\\/\\/)?(www.)?[a-zA-Z0-9-]+(.[a-zA-Z]{2,3})(:\\d{1,5})?([\\/a-zA-Z0-9_.\\-\\+%]*)*(\\?[a-zA-Z0-9_]+=[a-zA-Z0-9_.\\-\\+%]*)?(#[a-zA-Z0-9_]*)?$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(url);
+        return matcher.matches();
+    }
+}
