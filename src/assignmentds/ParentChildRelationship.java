@@ -39,7 +39,7 @@ public class ParentChildRelationship {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://127.0.0.1:3306/login_schema", //url format is jdbc:mysql://<database number>/<database name>
                     "root", //user usually is "root"
-                    "password" //put your password
+                    "password@" //put your password
             );
 
             Statement statement = connection.createStatement();
