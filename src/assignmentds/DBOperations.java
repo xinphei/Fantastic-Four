@@ -7,8 +7,11 @@ public class DBOperations {
 
     private static String url = "jdbc:mysql://127.0.0.1:3306/login_schema"; //url format is jdbc:mysql://<database number>/<database name>
     private static String DBuser = "root"; //user usually is "root"
-    private static String pw = "password"; //your password
+    private static String pw = "Wee1088@"; //your password
 
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(url, DBuser, pw);
+    }
 
     public static boolean addUserToDB(User newUser) {
         String sql = "INSERT INTO login_schema.users (email, username, password, salt, role, locationCoordinate_X, locationCoordinate_Y) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -57,7 +60,7 @@ public class DBOperations {
     }
 
     private static ResultSet getUserDetails(String query, String identifier) throws SQLException {
-        Connection connection = DriverManager.getConnection(url, DBuser, pw);
+        Connection connection = getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, identifier);
@@ -73,7 +76,7 @@ public class DBOperations {
     }
 
     private static ResultSet getUserDetails(String query, String email, String password) throws SQLException{
-        Connection connection = DriverManager.getConnection(url, DBuser, pw);
+        Connection connection = getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, email);
@@ -86,7 +89,7 @@ public class DBOperations {
     public static boolean updateCurrentPoints(String email, int newPoints){
         String sql = "UPDATE users SET currentPoints = ? WHERE email = ?";
 
-        try (Connection connection = DriverManager.getConnection(url, DBuser, pw);
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, newPoints);
