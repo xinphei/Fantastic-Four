@@ -64,8 +64,7 @@ public class DBOperations {
             byte[] retrievedSalt = resultSet.getBytes("salt");
             String inputHash = SecureEncryptor.hashPassword(password, retrievedSalt);
             if (hashedPassword.equals(inputHash)) {
-                User currUser = new User(resultSet.getString("email"), resultSet.getString("username"), hashedPassword, retrievedSalt, resultSet.getInt("role"), new Coordinate(resultSet.getDouble("locationCoordinate_X"), resultSet.getDouble("locationCoordinate_Y")), resultSet.getInt("currentPoints"));
-                return currUser;
+                return new User(resultSet.getString("email"), resultSet.getString("username"), hashedPassword, retrievedSalt, resultSet.getInt("role"), new Coordinate(resultSet.getDouble("locationCoordinate_X"), resultSet.getDouble("locationCoordinate_Y")), resultSet.getInt("currentPoints"));
             } else {
                 System.out.println("Incorrect Password");
                 return null;
