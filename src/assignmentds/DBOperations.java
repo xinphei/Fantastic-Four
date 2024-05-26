@@ -45,58 +45,34 @@ public class DBOperations {
     }
 
 
-    public static User getUserDetailsSet(String identifier, String password) throws SQLException {
+    public static User getLoginUser(String identifier, String password) throws SQLException {
         String query;
 
+        Connection connection = getConnection();
         //check if the identifier is email
         if (identifier.contains("@")) {
             query = "SELECT * FROM login_schema.users WHERE email = ?";
         } else {
             query = "SELECT * FROM login_schema.users WHERE username = ?";
         }
-        Connection connection = getConnection();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, identifier);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        PreparedStatement loginUser = connection.prepareStatement(query);
+        loginUser.setString(1, identifier);
+        ResultSet resultSet = loginUser.executeQuery();
+        if (resultSet.next()) {
             String hashedPassword = resultSet.getString("password");
             byte[] retrievedSalt = resultSet.getBytes("salt");
             String inputHash = SecureEncryptor.hashPassword(password, retrievedSalt);
             if (hashedPassword.equals(inputHash)) {
-                User currUser = new User(resultSet.getString("email"), resultSet.getString("username"), hashedPassword, retrievedSalt, resultSet.getInt("role"),new Coordinate(resultSet.getDouble("locationCoordinate_X"), resultSet.getDouble("locationCoordinate_Y")), resultSet.getInt("currentPoint"));
+                User currUser = new User(resultSet.getString("email"), resultSet.getString("username"), hashedPassword, retrievedSalt, resultSet.getInt("role"), new Coordinate(resultSet.getDouble("locationCoordinate_X"), resultSet.getDouble("locationCoordinate_Y")), resultSet.getInt("currentPoints"));
                 return currUser;
-            } else return null;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Incorrect Password");
-        return null;
-    }
-
-    private static ResultSet getUserDetails(String query, String identifier) throws SQLException {
-        Connection connection = getConnection();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, identifier);
-
-            return preparedStatement.executeQuery();
-        }
-    }
-
-//    public static ResultSet getUserDetailsSet(String email, String password) throws SQLException {
-//        String query = "SELECT * FROM login_schema.users where email = ? AND password = ?";
-//
-//        return getUserDetails(query, email, password);
-//    }
-
-    private static ResultSet getUserDetails(String query, String email, String password) throws SQLException{
-        Connection connection = getConnection();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, email);
-            preparedStatement.setString(2, password);
-
-            return preparedStatement.executeQuery();
+            } else {
+                System.out.println("Incorrect Password");
+                return null;
+            }
+        } else {
+            System.out.println("No user found with the provided identifier");
+            return null;
         }
     }
 

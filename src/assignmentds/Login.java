@@ -57,8 +57,7 @@ public class Login {
                 loginSuccessful = false;
                 continue;
             }
-        }
-        while (!loginSuccessful && askToLoginAgain(scanner));
+        } while (!loginSuccessful && askToLoginAgain(scanner));
         scanner.close();
     }
 
@@ -69,9 +68,7 @@ public class Login {
             System.out.println("Email/Username is required");
             System.out.println("-------------------------------------------");
             return null;
-        }
-        
-        else if (!AuthenticationSystem.isValidEmail(identifier)) {
+        } else if (!AuthenticationSystem.isValidEmail(identifier) && !AuthenticationSystem.isValidUsername(identifier)) {
             return null;
         }
         
@@ -82,50 +79,12 @@ public class Login {
             return null;
         }
 
-        try (ResultSet resultSet = DBOperations.getUserDetailsSet(identifier)) { //changed the parameter "email" to "identifier"
-            if (resultSet.next()) {
-                // validate password
-                String hashedPassword = resultSet.getString("password");
-                byte[] retrievedSalt = resultSet.getBytes("salt");
-                String inputHash = SecureEncryptor.hashPassword(password, retrievedSalt);
-                
-                // if password valid, retrieve user details
-                if (inputHash.equals(hashedPassword)) {
-
-                    //MODIFIED BY DY**********************************************
-                    String email = resultSet.getString("email");
-                    String username = resultSet.getString("username");
-                    int role = resultSet.getInt("role");
-                    double coordinateX = resultSet.getDouble("locationCoordinate_X");
-                    double coordinateY = resultSet.getDouble("locationCoordinate_Y");
-                    int current_points = resultSet.getInt("current_points");
-
-                    Coordinate coordinate = new Coordinate(coordinateX, coordinateY);
-
-                    User authenticatedUser = new User(email, username, hashedPassword, retrievedSalt, role, coordinate, current_points);
-                    //MODIFIED BY DY**********************************************
-                    return authenticatedUser;
-                }
-                else {
-                    // User authentication failed 
-                    System.out.println("-------------------------------------------");
-                    System.out.println("Login failed. Incorrect email/username or password.");
-                    System.out.println("-------------------------------------------");
-                    return null;
-                }
-            }
-            else {
-                // User authentication failed 
-                System.out.println("-------------------------------------------");
-                System.out.println("Login failed. Incorrect email/username or password.");
-                System.out.println("-------------------------------------------");
-                return null;
-            }
+        try {
+            return DBOperations.getLoginUser(identifier, password);
+        } catch (SQLException e) {
+            System.out.println("SQL error " + e.getSQLState());
         }
-        catch (SQLException e) {
-            e.printStackTrace();
-            return null;            
-        }
+        return null;
     }
 
     private static boolean askToLoginAgain(Scanner scanner) {

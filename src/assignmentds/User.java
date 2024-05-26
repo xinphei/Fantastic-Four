@@ -267,27 +267,27 @@ public class User{
         }
     }
 
-    public static User getUser(String email, String hashedPassword) {
-        try (ResultSet resultSet = DBOperations.getUserDetailsSet(email, hashedPassword)) {
-            if (resultSet.next()) {
-                String username = resultSet.getString("username");
-                byte[] retrievedSalt = resultSet.getBytes("salt");
-                int role =  resultSet.getInt("role");
-                double coordinateX = resultSet.getDouble("locationCoordinate_X");
-                double coordinateY = resultSet.getDouble("locationCoordinate_Y");
-                int currentPoints = resultSet.getInt("currentPoints");
-
-                Coordinate coordinate = new Coordinate(coordinateX, coordinateY);
-
-                return new User(username, email, hashedPassword, retrievedSalt, role, coordinate, currentPoints);
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
+//    public static User getUser(String email, String hashedPassword) {
+//        try (ResultSet resultSet = DBOperations.getUserDetailsSet(email, hashedPassword)) {
+//            if (resultSet.next()) {
+//                String username = resultSet.getString("username");
+//                byte[] retrievedSalt = resultSet.getBytes("salt");
+//                int role =  resultSet.getInt("role");
+//                double coordinateX = resultSet.getDouble("locationCoordinate_X");
+//                double coordinateY = resultSet.getDouble("locationCoordinate_Y");
+//                int currentPoints = resultSet.getInt("currentPoints");
+//
+//                Coordinate coordinate = new Coordinate(coordinateX, coordinateY);
+//
+//                return new User(username, email, hashedPassword, retrievedSalt, role, coordinate, currentPoints);
+//            }
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return null;
+//    }
 
     public static User registerUser(Scanner scanner) {
         do {
