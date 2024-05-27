@@ -34,9 +34,9 @@ public class ViewEvent {
 
         if (user.getRole() == 1) { // User is a student
         // Get parent registered events
-        List<Event> parentRegisteredEvents = getParentRegisteredEvents();
+        //List<Event> parentRegisteredEvents = getParentRegisteredEvents();
         // Display parent registered events for the student
-        viewRegisteredEvents(user, parentRegisteredEvents);
+        //viewRegisteredEvents(user, parentRegisteredEvents);
     }
 
 

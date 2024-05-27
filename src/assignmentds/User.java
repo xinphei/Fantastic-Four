@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Scanner;
 import assignmentds.Home;
+import java.sql.Timestamp;
 
 //Coordinate class
 class Coordinate {
@@ -60,14 +61,14 @@ public class User{
     private Coordinate locationCoordinate; //The Coordinate class is at above
     private int currentPoints;
     //add pointLastUpdated for GlobalLeaderboard (changes)
-    private LocalDateTime pointLastUpdated;
+    private Timestamp pointLastUpdated;
     //for FriendRequest purpose (changes) use linkedList for edges (graph thoery)
     private LinkedList<User> friends;
     private LinkedList<User> friendRequests;
 
     private byte [] salt; //ADDED BY DY
 
-    public User(String email, String username, String password, byte[] salt, int role, Coordinate locationCoordinate, int currentPoints){
+    public User(String email, String username, String password, byte[] salt, int role, Coordinate locationCoordinate, int currentPoints, Timestamp pointLastUpdated){
         this.email = email;
         this.username = username;
         this.password = password;
@@ -75,13 +76,14 @@ public class User{
         this.locationCoordinate = locationCoordinate;
         this.currentPoints = currentPoints; //CHANGED BY DY
         // changes
-        this.pointLastUpdated = LocalDateTime.now();
+        this.pointLastUpdated = pointLastUpdated;
         this.parents = new ArrayList<>();
         this.children = new ArrayList<>();
         // changes
         this.friends = new LinkedList<>();
         this.friendRequests = new LinkedList<>();
         this.salt = salt;
+        this.pastBookings = new ArrayList<>(); // Initialize pastBookings list
     }
 
     // Getters and setters
@@ -152,11 +154,11 @@ public class User{
     }
     
     //add pointLastUpdated for GlobalLeaderboard (changes)
-    public LocalDateTime getPointLastUpdated(){
+    public Timestamp getPointLastUpdated(){
         return pointLastUpdated;
     }
 
-    public void setPointLastUpdated(LocalDateTime pointLastUpdated) {
+    public void setPointLastUpdated(Timestamp pointLastUpdated) {
         this.pointLastUpdated = pointLastUpdated;
     }
     // changes
@@ -238,7 +240,7 @@ public class User{
     }
 
 
-    public static User createUser(String email, String username, String hashedPassword, byte[] salt, int role, Coordinate locationCoordinate, int currentPoint) {
+    public static User createUser(String email, String username, String hashedPassword, byte[] salt, int role, Coordinate locationCoordinate, int currentPoint, Timestamp pointLastUpdated) {
         // validate user details
         if (email == null || username == null || hashedPassword == null) {
             System.out.println("-------------------------------------------");
@@ -256,7 +258,9 @@ public class User{
                 salt,
                 role,
                 locationCoordinate,
-                currentPoint
+                currentPoint, 
+                pointLastUpdated
+                
         );
 
         // add user to database, return appropriately
@@ -340,21 +344,32 @@ public class User{
             double y = -500.0 + (500.0 - (-500.0)) * rand.nextDouble();
             String coordinates = "(" + x + ", " + y + ")";
             Coordinate coordinate = new Coordinate(x, y); //ADDED BY DY
-
+            int role;
             // Set user role
-            System.out.println("Roles:");
-            System.out.println("1- Young Students");
-            System.out.println("2- Parents");
-            System.out.println("3- Educators");
-            System.out.print("Enter Role Number: ");
-            int role = scanner.nextInt();
+            boolean isValidRole = false;
+            do{
+                System.out.println("Roles:");
+                System.out.println("1- Young Students");
+                System.out.println("2- Parents");
+                System.out.println("3- Educators");
+                System.out.print("Enter Role Number: ");
+                role = scanner.nextInt();
+                if(role ==1 || role ==2||role ==3){
+                    isValidRole = false;
+                }
+                else{
+                    System.out.println("Enter number 1 to 3 only");
+                    isValidRole = true;
+                }   
+            }while(isValidRole);
+            
             scanner.nextLine(); // Consume newline left-over
-
             // Hash the password before storing it
             byte[] salt = SecureEncryptor.generateSalt();
             String hashedPassword = SecureEncryptor.hashPassword(password, salt);
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-            User newUser = User.createUser(email, username, hashedPassword, salt, role, coordinate, 0);
+            User newUser = User.createUser(email, username, hashedPassword, salt, role, coordinate, 0, timestamp);
 
             if (newUser != null) {
                 System.out.println("-------------------------------------------");

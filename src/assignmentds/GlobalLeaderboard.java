@@ -1,17 +1,15 @@
 package assignmentds;
 
-import assignmentds.User;
-
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GlobalLeaderboard {
     
     private List<User> users;
 
     public GlobalLeaderboard() {
-        this.users = new ArrayList<>();
+        this.users = DBOperations.fetchAllUsers();
     }
     
     public List<User> getUsers() {
@@ -28,15 +26,28 @@ public class GlobalLeaderboard {
     }
 
     public void displayLeaderboard() {
-        // Sort users based on current points and timestamp of last point update
-        users.sort(Comparator.comparing((User user) -> user.getCurrentPoints()).reversed()
-                        .thenComparing((User user) -> user.getPointLastUpdated()).reversed());
-    
+        // Ensure users list is not null
+        if (users == null || users.isEmpty()) {
+            System.out.println("No users found.");
+            return;
+        }
+
+        // Filter users based on role equal to 1 (student)
+        List<User> studentUsers = users.stream()
+                .filter(user -> user.getRole() == 1)
+                .collect(Collectors.toList());
+
+        // Sort student users based on current points (descending) and timestamp of last point update (ascending)
+        studentUsers.sort(
+            Comparator.comparing(User::getCurrentPoints, Comparator.nullsLast(Comparator.reverseOrder()))
+                      .thenComparing(User::getPointLastUpdated, Comparator.nullsLast(Comparator.naturalOrder()))
+        );
+
         // Display leaderboard
         System.out.println("Global Leaderboard:");
-        System.out.println("Username\tCurrent Points");
-        for (User user : users) {
-            System.out.println(user.getUsername() + "\t\t" + user.getCurrentPoints());
+        System.out.printf("%-20s %s\n", "Username", "Current Points");
+        for (User user : studentUsers) {
+            System.out.printf("%-20s %d\n", user.getUsername(), user.getCurrentPoints());
         }
     }
 }

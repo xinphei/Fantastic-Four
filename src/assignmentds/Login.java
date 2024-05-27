@@ -14,7 +14,8 @@ public class Login {
             String cyan ="\u001B[36m";
             System.out.println("\n\n___________________________________________");
             System.out.println(cyan +"             ^^^ LOGIN PAGE ^^^            "+ reset);
-            System.out.println("___________________________________________");
+            System.out.println("______"
+                    + "_____________________________________");
             System.out.print("Email/Username: ");
             String identifier = scanner.nextLine();
             

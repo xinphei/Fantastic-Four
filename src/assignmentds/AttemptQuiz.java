@@ -6,17 +6,18 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.sql.Timestamp;
 
 public class AttemptQuiz {
     private static List<Quiz> availableQuizzes = Quiz.getQuizzes();
-    private static List<Quiz> completedQuizzes = new ArrayList<>();
+    private static List<String> completedQuizzes = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(User user) {
-
         System.out.println("   _   _   _                       _       ____       _     ");     
         System.out.println("  /_\\ | |_| |_ ___ _ __ ___  _ __ | |_    /___ \\_   _(_)____");
         System.out.println(" //_\\\\| __| __/ _ \\ '_ ` _ \\| '_ \\| __|  //  / / | | | |_  /");
@@ -25,15 +26,12 @@ public class AttemptQuiz {
         System.out.println("                            |_|");                            
 
         System.out.println("Welcome to the Quiz Attempter!");
-
+        
         // Initialize quizzes
         Quiz.initializeQuiz();
         
         // Display theme options and select themes
         List<String> selectedThemes = selectThemes();
-
-        // Display quizzes based on selected themes
-        displayQuizzes(selectedThemes);
 
         // Allow student to select and attempt quizzes
         selectAndAttemptQuizzes(selectedThemes, user);
@@ -47,7 +45,7 @@ public class AttemptQuiz {
         boolean validInput = false;
 
         while (!validInput) {
-            System.out.println("\nSelect themes to filter quizzes by entering their numbers separated by spaces (e.g. 1 2:");
+            System.out.println("\nSelect themes to filter quizzes by entering their numbers separated by spaces (e.g. 1 2):");
             System.out.println("0. Default (all selected)");
             System.out.println("1. Science");
             System.out.println("2. Technology");
@@ -92,23 +90,20 @@ public class AttemptQuiz {
         return selectedThemes;
     }
 
-    private static void displayQuizzes(List<String> selectedThemes) {
+    private static void displayQuizzes(List<String> selectedThemes, String[][] quizInfo) {
         System.out.println("\nAvailable Quizzes:");
-        // Counter for numbering quizzes, start with 1. XXX
         int counter = 1;
-        // Iterate over each selected theme
+        int index = 0;
         for (String theme : selectedThemes) {
             System.out.println("\n" + theme.toUpperCase()); // Display the theme in uppercase
             System.out.println("-------------"); // Underline the theme
- 
-
-            // Iterate over available quizzes
             for (Quiz quiz : availableQuizzes) {
-                // If the theme matches the selected theme
                 if (quiz.getTheme().equalsIgnoreCase(theme)) {
-                    // Display the quiz number and title
-                    System.out.println(counter + ". " + quiz.getTitle());
+                    quizInfo[index][0] = quiz.getTitle(); // Quiz name
+                    quizInfo[index][1] = completedQuizzes.contains(quiz.getTitle()) ? "Complete" : "Incomplete"; // Completion status
+                    System.out.println(counter + ". " + quiz.getTitle() + " [" + quizInfo[index][1] + "] ");
                     counter++;
+                    index++;
                 }
             }
         }
@@ -118,12 +113,15 @@ public class AttemptQuiz {
             System.out.println("No quizzes available for the selected themes.");
         }
     }
-
     
-
+    
     private static void selectAndAttemptQuizzes(List<String> selectedThemes, User user) {
         boolean continueAttempting = true;
+        int update = user.getCurrentPoints();
+        String[][] quizInfo = new String[selectedThemes.size() * availableQuizzes.size()][2];
+        
         while (continueAttempting) {
+            displayQuizzes(selectedThemes, quizInfo);
             System.out.println("\nSelect a quiz to attempt (or type 'done' to finish):");
             String selectedQuizNumber = scanner.nextLine();
 
@@ -148,16 +146,21 @@ public class AttemptQuiz {
                         }
 
                         if (selectedQuiz != null) {
-                             // Simulate attempting the quiz
+                            // Simulate attempting the quiz
                             System.out.println("Attempting quiz: " + selectedQuiz.getTitle());
                             // Open the quiz URL in a web browser
                             openQuizUrl(selectedQuiz.getQuizizzLink());
                             
                             // Mark the quiz as completed
-                            completedQuizzes.add(selectedQuiz);
+                            completedQuizzes.add(selectedQuiz.getTitle());
                             // Award 2 marks to the student
                             System.out.println("Congratulations! You have completed the quiz. You have been awarded 2 marks.");
-                            user.setCurrentPoints(user.getCurrentPoints() + 2);
+                            update += 2;
+                            Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+
+                            // Update points in the database
+                            DBOperations.updateCurrentPoints(user.getEmail(), update, now);
+                            System.out.println("Your existing points: " + update);
                         } else {
                             System.out.println("Quiz not found. Please select a valid quiz.");
                         }
@@ -172,17 +175,13 @@ public class AttemptQuiz {
             }
         }
     }
-    
+
     private static void openQuizUrl(String url) throws IOException, URISyntaxException {
-    // Check if the Desktop API is supported
         if (Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
-            // Open the URL in the default web browser
             desktop.browse(new URI(url));
         } else {
-            // If Desktop API is not supported, print a message
             System.out.println("Desktop API is not supported. Please open the following URL manually: " + url);
         }
     }
-
 }

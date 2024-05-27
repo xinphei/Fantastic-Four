@@ -21,7 +21,7 @@ public class AuthenticationSystem {
             return false; // Username contains '@', invalid
         }
         
-        String usernameRegex = "^[A-Za-z0-9_]{4,20}$";
+        String usernameRegex = "^[A-Za-z0-9_]{3,20}$";
         return username.matches(usernameRegex);
     }
 

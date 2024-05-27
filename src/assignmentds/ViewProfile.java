@@ -79,14 +79,22 @@ public class ViewProfile {
         }
     }
     
+    
     // Method to display past bookings
     private static void displayPastBookings(List<BookingSystem> pastBookings) {
-        for (BookingSystem booking : pastBookings) {
+    if (pastBookings == null || pastBookings.isEmpty()) {
+        System.out.println("No past bookings available.");
+        return;
+    }
+
+    for (BookingSystem booking : pastBookings) {
+        if (booking != null) {
             System.out.println("- Destination: " + booking.getDestination().getName());
             System.out.println("  Date: " + booking.getDate());
             System.out.println("");
         }
     }
+}
 }
 
 

@@ -1,13 +1,14 @@
 package assignmentds;
 
 import java.sql.*;
+import java.util.LinkedList;
 import java.util.Properties;
 
 public class DBOperations {
 
     private static String url = "jdbc:mysql://127.0.0.1:3306/userdb"; //url format is jdbc:mysql://<database number>/<database name>
     private static String DBuser = "root"; //user usually is "root"
-    private static String pw = "0123"; //your password
+    private static String pw = "2416"; //your password
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, DBuser, pw);
@@ -64,7 +65,7 @@ public class DBOperations {
             byte[] retrievedSalt = resultSet.getBytes("salt");
             String inputHash = SecureEncryptor.hashPassword(password, retrievedSalt);
             if (hashedPassword.equals(inputHash)) {
-                return new User(resultSet.getString("email"), resultSet.getString("username"), hashedPassword, retrievedSalt, resultSet.getInt("role"), new Coordinate(resultSet.getDouble("locationCoordinate_X"), resultSet.getDouble("locationCoordinate_Y")), resultSet.getInt("currentPoints"));
+                return new User(resultSet.getString("email"), resultSet.getString("username"), hashedPassword, retrievedSalt, resultSet.getInt("role"), new Coordinate(resultSet.getDouble("locationCoordinate_X"), resultSet.getDouble("locationCoordinate_Y")), resultSet.getInt("currentPoints"), resultSet.getTimestamp("pointLastUpdated"));
             } else {
                 System.out.println("Incorrect Password");
                 return null;
@@ -75,30 +76,54 @@ public class DBOperations {
         }
     }
 
-    public static boolean updateCurrentPoints(String email, int newPoints){
-        String sql = "UPDATE users SET currentPoints = ? WHERE email = ?";
+    public static boolean updateCurrentPoints(String email, int newPoints, Timestamp pointLastUpdated) {
+        String sql = "UPDATE users SET currentPoints = ?, pointLastUpdated = ? WHERE email = ?";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, newPoints);
-            statement.setString(2, email);
+            statement.setTimestamp(2, pointLastUpdated);
+            statement.setString(3, email);
 
             int rowsUpdated = statement.executeUpdate();
-            return rowsUpdated > 0; // Return true if the update was successful
+            return rowsUpdated > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-//        Usage Example:
-//        boolean success = updateUserPoints("user@example.com", 100);
-//        if (success) {
-//            System.out.println("Points updated successfully.");
-//        } else {
-//            System.out.println("Failed to update points.");
-//        }
+    }
+    
+    public static LinkedList<User> fetchAllUsers() {
+        LinkedList<User> allUsers = new LinkedList<>();
+        String query = "SELECT email, username, password, salt, role, locationCoordinate_X, locationCoordinate_Y, currentPoints, pointLastUpdated FROM users";
 
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                String email = resultSet.getString("email");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                byte[] salt = resultSet.getBytes("salt");
+                int role = resultSet.getInt("role");
+                double locationCoordinate_X = resultSet.getDouble("locationCoordinate_X");
+                double locationCoordinate_Y = resultSet.getDouble("locationCoordinate_Y");
+                int currentPoints = resultSet.getInt("currentPoints");
+                Timestamp pointLastUpdated = resultSet.getTimestamp("pointLastUpdated");
+
+                User user = new User(email, username, password, salt, role, new Coordinate(locationCoordinate_X, locationCoordinate_Y), currentPoints, pointLastUpdated);
+                allUsers.add(user);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return allUsers;
     }
 
 
