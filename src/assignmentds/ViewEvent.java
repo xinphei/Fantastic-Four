@@ -28,13 +28,19 @@ public class ViewEvent {
     // Only parents (role 2) can register for events
     if (user.getRole() == 2) {
         registerForEvents(user); // Only parents can access register for event page
-        // View registered events should only be accessible to parents who have registered events
-        viewRegisteredEvents(user);
     } else {
         System.out.println();
     }
+    
+    if (user.getRole() == 1) { // User is a student
+    // Get parent registered events
+    List<Event> parentRegisteredEvents = getParentRegisteredEvents();
+    // Display parent registered events for the student
+    viewRegisteredEvents(user, parentRegisteredEvents);
+}
 
-    // Proceed to home page
+
+    viewRegisteredEvents(user, registeredEvents);
     Home.main(user);
 }
 
@@ -174,23 +180,23 @@ public class ViewEvent {
         return false;
     }
 
-    private static void viewRegisteredEvents(User user) {
-    // Check if the user is a parent (role 2) and if they have registered events
-    if (user.getRole() == 2 && !registeredEvents.isEmpty()) {
-        System.out.println(" __                              __       _ _           __            _     _                    _   _ \n" +
-                "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    /__\\ ___  __ _(_)___| |_ ___ _ __ ___  __| | / \\\n" +
-                "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / \\/// _ \\/ _` | / __| __/ _ \\ '__/ _ \\/ _` |/  /\n" +
-                "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | / _  \\  __/ (_| | \\__ \\ ||  __/ | |  __/ (_| /\\_/ \n" +
-                "\\__/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, | \\/ \\_/\\___|\\__, |_|___/\\__\\___|_|  \\___|\\__,_\\/   \n" +
-                "                                              |___/             |___/                                  ");
+    private static void viewRegisteredEvents(User user, List<Event> parentRegisteredEvents) {
+    System.out.println(" __                              __       _ _           __            _     _                    _   _ \n" +
+            "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    /__\\ ___  __ _(_)___| |_ ___ _ __ ___  __| | / \\\n" +
+            "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / \\/// _ \\/ _` | / __| __/ _ \\ '__/ _ \\/ _` |/  /\n" +
+            "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | / _  \\  __/ (_| | \\__ \\ ||  __/ | |  __/ (_| /\\_/ \n" +
+            "\\__/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, | \\/ \\_/\\___|\\__, |_|___/\\__\\___|_|  \\___|\\__,_\\/   \n" +
+            "                                              |___/             |___/                                  ");
 
-        System.out.println("Total points gained: " + points);
-        for (Event event : registeredEvents) {
+    System.out.println("Total points gained: " + points);
+    if (parentRegisteredEvents.isEmpty()) {
+        System.out.println("No events registered by parents.");
+    } else {
+        for (Event event : parentRegisteredEvents) {
             System.out.println(event);
         }
-    } else {
-        System.out.println("No events registered or access denied. Only parents who successfully registered an event can view registered events.");
     }
 }
+
 
 }
