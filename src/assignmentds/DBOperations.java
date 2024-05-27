@@ -9,6 +9,9 @@ public class DBOperations {
     private static String DBuser = "root"; //user usually is "root"
     private static String pw = "password"; //your password
 
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(url, DBuser, pw);
+    }
 
     public static boolean addUserToDB(User newUser) {
         String sql = "INSERT INTO login_schema.users (email, username, password, salt, role, locationCoordinate_X, locationCoordinate_Y) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -21,7 +24,6 @@ public class DBOperations {
                 System.out.println("Email has already been registered");
                 System.out.println("---------------------------------------------");
                 return false;
-
             } else {
                 statement.setString(1, newUser.getEmail());
                 statement.setString(2, newUser.getUsername());
@@ -43,9 +45,10 @@ public class DBOperations {
     }
 
 
-    public static ResultSet getUserDetailsSet(String identifier) throws SQLException {
+    public static User getLoginUser(String identifier, String password) throws SQLException {
         String query;
 
+        Connection connection = getConnection();
         //check if the identifier is email
         if (identifier.contains("@")) {
             query = "SELECT * FROM login_schema.users WHERE email = ?";
@@ -53,40 +56,29 @@ public class DBOperations {
             query = "SELECT * FROM login_schema.users WHERE username = ?";
         }
 
-        return getUserDetails(query, identifier);
-    }
-
-    private static ResultSet getUserDetails(String query, String identifier) throws SQLException {
-        Connection connection = DriverManager.getConnection(url, DBuser, pw);
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, identifier);
-
-            return preparedStatement.executeQuery();
-        }
-    }
-
-    public static ResultSet getUserDetailsSet(String email, String password) throws SQLException {
-        String query = "SELECT * FROM login_schema.users where email = ? AND password = ?";
-
-        return getUserDetails(query, email, password);
-    }
-
-    private static ResultSet getUserDetails(String query, String email, String password) throws SQLException{
-        Connection connection = DriverManager.getConnection(url, DBuser, pw);
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, email);
-            preparedStatement.setString(2, password);
-
-            return preparedStatement.executeQuery();
+        PreparedStatement loginUser = connection.prepareStatement(query);
+        loginUser.setString(1, identifier);
+        ResultSet resultSet = loginUser.executeQuery();
+        if (resultSet.next()) {
+            String hashedPassword = resultSet.getString("password");
+            byte[] retrievedSalt = resultSet.getBytes("salt");
+            String inputHash = SecureEncryptor.hashPassword(password, retrievedSalt);
+            if (hashedPassword.equals(inputHash)) {
+                return new User(resultSet.getString("email"), resultSet.getString("username"), hashedPassword, retrievedSalt, resultSet.getInt("role"), new Coordinate(resultSet.getDouble("locationCoordinate_X"), resultSet.getDouble("locationCoordinate_Y")), resultSet.getInt("currentPoints"));
+            } else {
+                System.out.println("Incorrect Password");
+                return null;
+            }
+        } else {
+            System.out.println("No user found with the provided identifier");
+            return null;
         }
     }
 
     public static boolean updateCurrentPoints(String email, int newPoints){
         String sql = "UPDATE users SET currentPoints = ? WHERE email = ?";
 
-        try (Connection connection = DriverManager.getConnection(url, DBuser, pw);
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, newPoints);
