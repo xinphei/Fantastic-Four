@@ -14,26 +14,31 @@ public class ViewEvent {
     private static LocalDate currentDate = LocalDate.of(2024, 5, 18); // Current date
 
     public static void main(User user) {
-        //initializeEvents();
-        Event.initializeEvents();
+    // Initialize events
+    Event.initializeEvents();
 
-        if (currentDate.equals(LocalDate.of(2024,12,31))) {
-            // Display live events
-            displayLiveEvents();
-
-        } else {
-            // Display live events
-            displayLiveEvents();
-            // Display closest upcoming events
-            displayClosestUpcomingEvents();
-            // Register for events
-        }
-
-        registerForEvents();
-        // View registered events
-        viewRegisteredEvents();
-        Home.main(user);
+    // Display live events and closest upcoming events regardless of user role
+    if (currentDate.equals(LocalDate.of(2024,12,31))) {
+        displayLiveEvents();
+    } else {
+        displayLiveEvents();
+        displayClosestUpcomingEvents();
     }
+
+    // Only parents (role 2) can register for events
+    if (user.getRole() == 2) {
+        registerForEvents(user); // Only parents can access register for event page
+        // View registered events should only be accessible to parents who have registered events
+        viewRegisteredEvents(user);
+    } else {
+        System.out.println();
+    }
+
+    // Proceed to home page
+    Home.main(user);
+}
+
+
 
 
     private static void displayLiveEvents() {
@@ -108,22 +113,29 @@ public class ViewEvent {
         }
     }
 
-    private static void registerForEvents() {
-        boolean continueRegistration = true;
+    private static void registerForEvents(User user) {
+    // Only parents (role 2) can register for events
+    if (user.getRole() != 2) {
+        System.out.println("Access denied. Only parents can register for events.");
+        return;
+    }
 
-        while (continueRegistration) {
-            System.out.println("\nWould you like to register for an event? (Y/N)");
-            String choice = scanner.nextLine().toUpperCase();
+    boolean continueRegistration = true;
 
-            if (choice.equals("Y")) {
-                registerForEvent();
-            } else if (choice.equals("N")) {
-                continueRegistration = false;
-            } else {
-                System.out.println("Invalid choice. Please enter 'Y' or 'N'.");
-            }
+    while (continueRegistration) {
+        System.out.println("\nWould you like to register for an event? (Y/N)");
+        String choice = scanner.nextLine().toUpperCase();
+
+        if (choice.equals("Y")) {
+            registerForEvent();
+        } else if (choice.equals("N")) {
+            continueRegistration = false;
+        } else {
+            System.out.println("Invalid choice. Please enter 'Y' or 'N'.");
         }
     }
+}
+
 
     private static void registerForEvent() {
         System.out.println("Enter the event title you want to register for:");
@@ -162,7 +174,9 @@ public class ViewEvent {
         return false;
     }
 
-    private static void viewRegisteredEvents() {
+    private static void viewRegisteredEvents(User user) {
+    // Check if the user is a parent (role 2) and if they have registered events
+    if (user.getRole() == 2 && !registeredEvents.isEmpty()) {
         System.out.println(" __                              __       _ _           __            _     _                    _   _ \n" +
                 "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    /__\\ ___  __ _(_)___| |_ ___ _ __ ___  __| | / \\\n" +
                 "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / \\/// _ \\/ _` | / __| __/ _ \\ '__/ _ \\/ _` |/  /\n" +
@@ -171,12 +185,12 @@ public class ViewEvent {
                 "                                              |___/             |___/                                  ");
 
         System.out.println("Total points gained: " + points);
-        if (registeredEvents.isEmpty()) {
-            System.out.println("No events registered.");
-        } else {
-            for (Event event : registeredEvents) {
-                System.out.println(event);
-            }
+        for (Event event : registeredEvents) {
+            System.out.println(event);
         }
+    } else {
+        System.out.println("No events registered or access denied. Only parents who successfully registered an event can view registered events.");
     }
+}
+
 }
