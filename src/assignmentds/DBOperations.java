@@ -5,16 +5,16 @@ import java.util.Properties;
 
 public class DBOperations {
 
-    private static String url = "jdbc:mysql://127.0.0.1:3306/login_schema"; //url format is jdbc:mysql://<database number>/<database name>
+    private static String url = "jdbc:mysql://127.0.0.1:3306/userdb"; //url format is jdbc:mysql://<database number>/<database name>
     private static String DBuser = "root"; //user usually is "root"
-    private static String pw = "password"; //your password
+    private static String pw = "2416"; //your password
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, DBuser, pw);
     }
 
     public static boolean addUserToDB(User newUser) {
-        String sql = "INSERT INTO login_schema.users (email, username, password, salt, role, locationCoordinate_X, locationCoordinate_Y) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO userdb.users (email, username, password, salt, role, locationCoordinate_X, locationCoordinate_Y) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(url, DBuser, pw);
              PreparedStatement statement = connection.prepareStatement(sql);){
@@ -51,9 +51,9 @@ public class DBOperations {
         Connection connection = getConnection();
         //check if the identifier is email
         if (identifier.contains("@")) {
-            query = "SELECT * FROM login_schema.users WHERE email = ?";
+            query = "SELECT * FROM userdb.users WHERE email = ?";
         } else {
-            query = "SELECT * FROM login_schema.users WHERE username = ?";
+            query = "SELECT * FROM userdb.users WHERE username = ?";
         }
 
         PreparedStatement loginUser = connection.prepareStatement(query);

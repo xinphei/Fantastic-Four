@@ -39,6 +39,7 @@ public class AttemptQuiz {
         selectAndAttemptQuizzes(selectedThemes, user);
 
         scanner.close();
+        Home.main(user);
     }
 
     private static List<String> selectThemes() {

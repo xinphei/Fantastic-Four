@@ -13,7 +13,7 @@ public class ViewEvent {
     private static Scanner scanner = new Scanner(System.in);
     private static LocalDate currentDate = LocalDate.of(2024, 5, 18); // Current date
 
-    public static void main(String[] args) {
+    public static void main(User user) {
         //initializeEvents();
         Event.initializeEvents();
 
@@ -32,6 +32,7 @@ public class ViewEvent {
         registerForEvents();
         // View registered events
         viewRegisteredEvents();
+        Home.main(user);
     }
 
 

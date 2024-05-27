@@ -58,6 +58,7 @@ public class FriendRequest {
         }
 
         scanner.close();
+        Home.main(user);
     }
 
     private static LinkedList<UserNode> createGraph(LinkedList<User> allUsers) {

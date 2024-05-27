@@ -8,6 +8,7 @@ public class ViewProfile {
 
         // Call displayProfile method with the provided user
         displayProfile(user);
+        Home.main(user);
     }
 
     public static void displayProfile(User user) {
@@ -16,7 +17,8 @@ public class ViewProfile {
         System.out.println("Username: " + user.getUsername());
         System.out.println("Role: " + getRoleName(user.getRole()));
         System.out.println("Location Coordinate: " + user.getLocationCoordinate());
-
+        
+        
         // Additional information based on role
         switch (user.getRole()) {
             case 1: // Young Students
@@ -39,6 +41,7 @@ public class ViewProfile {
             default:
                 System.out.println("Invalid role.");
         }
+        
     }
 
     // Method to get role name based on role number

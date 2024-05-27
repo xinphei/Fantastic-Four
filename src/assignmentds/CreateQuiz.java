@@ -16,7 +16,7 @@ public class CreateQuiz {
         return numQuizCreated;
     }
     
-    public static void main(String[] args) {
+    public static void main(User user) {
         System.out.println("   ___               _           ____       _         ___                   \n" +
                 "  / __\\ __ ___  __ _| |_ ___    /___ \\_   _(_)____   / _ \\__ _  __ _  ___ _ \n" +
                 " / / | '__/ _ \\/ _` | __/ _ \\  //  / / | | | |_  /  / /_)/ _` |/ _` |/ _ (_)\n" +

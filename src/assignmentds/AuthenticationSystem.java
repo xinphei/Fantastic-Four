@@ -55,7 +55,7 @@ public class AuthenticationSystem {
 
     public static boolean isIdentifierRegistered(Connection connection, String identifier) throws SQLException {
         // Check if the provided identifier (email or username) is registered
-        String query = "SELECT COUNT(*) FROM login_schema.users WHERE email = ? OR username = ?";
+        String query = "SELECT COUNT(*) FROM userdb.users WHERE email = ? OR username = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, identifier);
             preparedStatement.setString(2, identifier);

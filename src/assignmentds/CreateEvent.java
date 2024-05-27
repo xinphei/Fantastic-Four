@@ -9,7 +9,7 @@ public class CreateEvent {
     
     private static int numEventsCreated = 0;
 
-    public static void main(String[] args) {
+    public static void main(User user) {
         System.out.println("   ___               _           __                 _       ___                   \n" +
                 "  / __\\ __ ___  __ _| |_ ___    /__\\_   _____ _ __ | |_    / _ \\__ _  __ _  ___ _ \n" +
                 " / / | '__/ _ \\/ _` | __/ _ \\  /_\\ \\ \\ / / _ \\ '_ \\| __|  / /_)/ _` |/ _` |/ _ (_)\n" +

@@ -18,12 +18,13 @@ public class GlobalLeaderboard {
         return users;
     }
 
-    public static void main(String[] args) {
+    public static void main(User user) {
         // Create an instance of GlobalLeaderboard
         GlobalLeaderboard leaderboard = new GlobalLeaderboard();
     
         // Display leaderboard
         leaderboard.displayLeaderboard();
+        Home.main(user);
     }
 
     public void displayLeaderboard() {

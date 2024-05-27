@@ -3,13 +3,14 @@ package assignmentds;
 import java.io.*;
 import java.sql.Timestamp;
 import java.util.Scanner;
+import assignmentds.User;
 
 public class Forum {
 
     private static final String FILE_PATH = "forum_post.txt";
     private static final int MAX_FORUM_SIZE = 200;
 
-    public static void main(String [] args) {
+    public static void main(User user) {
         
         DiscussionPost[] forumPosts = new DiscussionPost[MAX_FORUM_SIZE];
         int forumSize = loadForumData(forumPosts);
@@ -35,19 +36,16 @@ public class Forum {
                         viewForum(forumPosts, forumSize);
                         break;
                     case 2:
-                        forumSize = addPost(forumPosts, forumSize, scanner/*, user*/);
+                        forumSize = addPost(forumPosts, forumSize, scanner, user);
                         break;
                     case 3:
                         System.out.println("Exiting the forum. Goodbye!");
                         saveForumData(forumPosts, forumSize);
-                        //Home.main(user);
+                        Home.main(user);
                         System.exit(0);
                     default:
                         System.out.println("Invalid choice. Please enter a valid option.");
                 }
-            }
-            else {
-                System.out.println("Invalid choice. Please enter a valid option.");
             }
         }
     }
@@ -62,7 +60,7 @@ public class Forum {
                 String username = parts[1];
                 Timestamp timestamp = Timestamp.valueOf(parts[2]);
                 String message = parts[3];
-                forumPosts[forumSize++] = new DiscussionPost(id, /*username,*/ timestamp, message);
+                forumPosts[forumSize++] = new DiscussionPost(id, username, timestamp, message);
             }
         }
         catch (IOException | NumberFormatException e) {
@@ -119,15 +117,15 @@ public class Forum {
         System.out.println();
     }
 
-    private static int addPost(DiscussionPost[] forumPosts, int forumSize, Scanner scanner/*, User user*/) {
-        //String username = user.getUsername();
-        //System.out.print("Username: " + username);
+    private static int addPost(DiscussionPost[] forumPosts, int forumSize, Scanner scanner, User user) {
+        String username = user.getUsername();
+        System.out.print("Username: " + username);
 
         System.out.print("\nEnter your message: ");
         String message = scanner.nextLine(); // Consume the newline character
         message = scanner.nextLine(); // Read the actual message
 
-        forumPosts[forumSize++] = new DiscussionPost(forumSize + 1/*, username*/, new Timestamp(System.currentTimeMillis()), message);
+        forumPosts[forumSize++] = new DiscussionPost(forumSize + 1, username, new Timestamp(System.currentTimeMillis()), message);
 
         if (forumSize == forumPosts.length) {
             System.out.println("Forum is full. Your post has been added, but consider removing old posts.");
@@ -142,24 +140,24 @@ public class Forum {
     static class DiscussionPost {
 
         private int id;
-        //private String username;
+        private String username;
         private Timestamp timestamp;
         private String message;
 
-        public DiscussionPost(int id/*, String username*/, Timestamp timestamp, String message) {
+        public DiscussionPost(int id, String username, Timestamp timestamp, String message) {
             this.id = id;
-            //this.username = username;
+            this.username = username;
             this.timestamp = timestamp;
             this.message = message;
         }
 
         @Override
         public String toString() {
-            return "ID: " + id + "\nUsername: " + /*username + */"\nTimestamp: " + timestamp + "\nMessage: " + message;
+            return "ID: " + id + "\nUsername: " + username + "\nTimestamp: " + timestamp + "\nMessage: " + message;
         }
 
         public String toFileString() {
-            return id + "," + /*username + */"," + timestamp + "," + message;
+            return id + "," + username + "," + timestamp + "," + message;
         }
     }
 }

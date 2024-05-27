@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Scanner;
+import assignmentds.Home;
 
 //Coordinate class
 class Coordinate {
@@ -359,6 +360,7 @@ public class User{
                 System.out.println("-------------------------------------------");
                 System.out.println("Registration successful!");
                 System.out.println("-------------------------------------------");
+                Home.main(newUser);
                 return newUser;
             }
             else {
