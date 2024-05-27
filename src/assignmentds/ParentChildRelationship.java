@@ -32,6 +32,30 @@ class Graph {
 }
 
 public class ParentChildRelationship {
+    public static Graph loadParentChildRelationships() {
+        Graph graph = new Graph();
+        try {
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:mysql://127.0.0.1:3306/login_schema",
+                    "root",
+                    "password"
+            );
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM login_schema.parentchildrelationship");
+
+            while (resultSet.next()) {
+                String parent = resultSet.getString("parent_username");
+                String child = resultSet.getString("child_username");
+                graph.addEdge(parent, child);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return graph;
+    }
+    
     public static void main(String[] args) {
         Graph graph = new Graph();
 

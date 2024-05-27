@@ -29,24 +29,51 @@ public class BookingSystem extends ViewEvent {
         double userX = 0.00;
         double userY = 0.00;
 
+        // Load parent-child relationships
+        Graph parentChildGraph = ParentChildRelationship.loadParentChildRelationships();
+
         // Current date
         // Calculate distances and filter destinations
-        List <Destination> filteredDestinations = filterDestinations(destinations, userX, userY);
+        List<Destination> filteredDestinations = filterDestinations(destinations, userX, userY);
 
         // Display booking page
         displayBookingPage(filteredDestinations, currentDate);
+
+        // Get and display children for parent
+        System.out.print("Enter parent's username: ");
+        String parentUsername = sc.next();
+        List<String> children = parentChildGraph.getChildren(parentUsername);
+
+        if (children.isEmpty()) {
+            System.out.println("No children found for the entered username.");
+            return;
+        }
+
+        System.out.println("List of children(s): ");
+        for (int i = 0; i < children.size(); i++) {
+            System.out.println("[" + (i + 1) + "] " + children.get(i));
+        }
+        
+        System.out.print("Enter a child's name for booking: ");
+        int selectedChildIndex = sc.nextInt();
+        if (selectedChildIndex < 1 || selectedChildIndex > children.size()) {
+            System.out.println("Invalid selection. Please enter a valid index.");
+            return;
+        }
+
+        String selectedChild = children.get(selectedChildIndex - 1);
 
         // Display booking page
         System.out.print("Enter destination ID for booking: ");
         int selectedDestinationId = sc.nextInt();
         if (selectedDestinationId < 1 || selectedDestinationId > filteredDestinations.size()) {
             System.out.println("Invalid destination ID. Please enter a valid ID.");
-            return; // Exit the program if the destination ID is invalid
+            return;
         }
 
         Destination selectedDestination = filteredDestinations.get(selectedDestinationId - 1);
         System.out.println("=========================================================================");
-        System.out.println("\nSelected booking for: " + selectedDestination.getName());
+        System.out.println("\nSelected booking for: " + selectedDestination.getName() + " for child " + selectedChild);
 
         // Calculate available time slots
         List<LocalDate> availableTimeSlots = calculateAvailableTimeSlots(currentDate, null);
@@ -62,11 +89,11 @@ public class BookingSystem extends ViewEvent {
         int selectedTimeSlot = sc.nextInt();
         if (selectedTimeSlot < 1 || selectedTimeSlot > availableTimeSlots.size()) {
             System.out.println("Invalid time slot. Please enter a valid time slot.");
-            return; // Exit the program if the time slot is invalid
+            return;
         }
 
         LocalDate selectedDate = availableTimeSlots.get(selectedTimeSlot - 1);
-        System.out.println("\nBooking confirmed for " + selectedDestination.getName() + " on " + formatter.format(selectedDate));
+        System.out.println("\nBooking confirmed for " + selectedDestination.getName() + " on " + formatter.format(selectedDate) + " for child " + selectedChild);
 
         System.out.println("                                  __       _ _         _                 _            _   _ \n" +
                 " ___ _   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _  | |__   ___   ___ | | _____  __| | / \\\n" +
