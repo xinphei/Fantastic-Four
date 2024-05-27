@@ -47,6 +47,8 @@ public class CreateEvent {
             String input = sc.nextLine();
             createAnotherEvent = input.equalsIgnoreCase("yes");
         }
+        // Write events to file after all events have been entered
+        Event.writeEventsToFile("events.txt");
         sc.close();
     }
     

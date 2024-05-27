@@ -1,0 +1,34 @@
+History Lecture Series,Presentation on historical events,History Department,2024-04-28,14:00,16:00
+Educational Seminar,Exploring new teaching methodologies,Auditorium A,2024-04-30,09:00,12:00
+STEM Workshop,Hands-on activities for Science, Technology, Engineering, and Math,Science Lab,2024-05-09,13:00,16:00
+Professional Development Session,Improving educator skills,Conference Room B,2024-05-18,10:00,12:00
+School Orchestra Concert,Performance by school orchestra members,Auditorium,2024-05-18,18:00,20:00
+Guest Lecture on Pedagogy,Insights from experienced educators,Lecture Hall,2024-05-25,14:00,16:00
+Mathematics Symposium,Exploring advanced math concepts,Mathematics Department,2024-06-05,09:00,13:00
+Technology Integration Workshop,Incorporating technology into the classroom,Computer Lab,2024-06-10,10:00,12:00
+Science Fair Preparation Meeting,Planning for the upcoming science fair,Principal's Office,2024-06-15,15:00,17:00
+Engineering Design Challenge,Engaging students in hands-on engineering projects,Engineering Wing,2024-06-20,13:00,15:00
+Professional Learning Community Meeting,Collaborative discussion among educators,Staff Lounge,2024-06-25,11:00,13:00
+STEM Education Conference,Sharing best practices in STEM education,Convention Center,2024-07-01,09:00,17:00
+Language Arts Workshop,Improving literacy instruction strategies,Language Arts Department,2024-07-06,10:00,12:00
+In-Service Training Session,Training session for new curriculum implementation,Training Room,2024-07-12,13:00,15:00
+Parent-Teacher Conference,Meeting with parents to discuss student progress,Classroom 101,2024-07-20,16:00,18:00
+Educational Technology Expo,Showcasing innovative educational technologies,Exhibition Hall,2024-07-27,10:00,16:00
+Seminar on Creative Writing,Explore techniques for creative writing,Library,2024-08-10,14:00,16:00
+Workshop on Classroom Management,Learn effective classroom management strategies,Teacher's Lounge,2024-08-15,09:00,12:00
+Geography Field Trip,Exploration of geographical landmarks,Outdoor,2024-08-26,09:00,16:00
+Music Education Symposium,Discuss music education trends and practices,Music Room,2024-09-01,13:00,17:00
+Art Exhibition,Display artworks created by students,Art Gallery,2024-09-07,10:00,15:00
+Workshop on Project-Based Learning,Explore project-based learning methodologies,Classroom 102,2024-09-14,09:00,12:00
+Educational Leadership Summit,Discuss leadership strategies for educators,Conference Room A,2024-09-28,10:00,16:00
+Health Education Workshop,Explore health education curriculum,Health Room,2024-10-01,13:00,15:00
+Physical Education Workshop,Demonstration of physical education activities,Gymnasium,2024-10-15,10:00,12:00
+Seminar on Student Assessment,Discuss different methods of student assessment,Auditorium B,2024-10-21,14:00,16:00
+Educator Networking Event,Building connections among educators,Cafeteria,2024-10-30,16:00,18:00
+Drama Club Performance,Dramatic performances by drama club members,Theater,2024-11-01,17:00,19:00
+Educational Psychology Conference,Discuss psychology concepts in education,Psychology Department,2024-11-12,09:00,17:00
+Coding Bootcamp,Intensive coding training for educators,Computer Lab,2024-11-22,11:00,16:00
+Workshop on Differentiated Instruction,Learn strategies for differentiated instruction,Classroom 103,2024-12-04,10:00,13:00
+Special Education Symposium,Discuss special education practices and policies,Special Education Department,2024-12-14,13:00,16:00
+Technology in Music Education Workshop,Explore technology integration in music education,Music Room,2024-12-19,10:00,12:00
+Literature Circle,Discussion on classic literature works,Library,2024-12-31,15:00,17:00

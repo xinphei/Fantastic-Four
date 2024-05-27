@@ -1,5 +1,10 @@
 package assignmentds;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +73,38 @@ public class Quiz {
                     "\nTheme\t\t: " + theme +
                     "\nQuizizzLink\t: " + quizizzLink +
                     "\n";
+        }
+        
+        public static void writeQuizzesToFile(String filename) {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(filename,true))) {
+                for (Quiz quiz : quizzes) {
+                    // Writing each quiz's details separated by commas
+                    writer.println(quiz.getTitle() + "," +
+                            quiz.getDescription() + "," +
+                            quiz.getTheme() + "," +
+                            quiz.getQuizizzLink());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        public static void readQuizzesFromFile(String filename) {
+            List<Quiz> quizzes = new ArrayList<>();
+            try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Splitting each line by comma to extract quiz details
+                    String[] parts = line.split(", ");
+                    String title = parts[0];
+                    String description = parts[1];
+                    String theme = parts[2];
+                    String url = parts[3];
+                    quizzes.add(new Quiz(title, description, theme, url));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         public static void initializeQuiz(){

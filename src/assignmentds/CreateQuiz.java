@@ -75,6 +75,7 @@ public class CreateQuiz {
             String input = sc.nextLine();
             createAnotherQuiz = input.equalsIgnoreCase("yes");
         }
+        Quiz.writeQuizzesToFile("quizzes.txt");
         sc.close();
     }
 

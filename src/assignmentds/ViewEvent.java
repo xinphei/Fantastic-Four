@@ -14,38 +14,36 @@ public class ViewEvent {
     private static LocalDate currentDate = LocalDate.of(2024, 5, 18); // Current date
 
     public static void main(User user) {
-    // Initialize events
-    Event.initializeEvents();
+        // Initialize events
+        Event.initializeEvents();
 
-    // Display live events and closest upcoming events regardless of user role
-    if (currentDate.equals(LocalDate.of(2024,12,31))) {
-        displayLiveEvents();
-    } else {
-        displayLiveEvents();
-        displayClosestUpcomingEvents();
+        // Display live events and closest upcoming events regardless of user role
+        if (currentDate.equals(LocalDate.of(2024,12,31))) {
+            displayLiveEvents();
+        } else {
+            displayLiveEvents();
+            displayClosestUpcomingEvents();
+        }
+
+        // Only parents (role 2) can register for events
+        if (user.getRole() == 2) {
+            registerForEvents(user); // Only parents can access register for event page
+        } else {
+            System.out.println();
+        }
+
+        if (user.getRole() == 1) { // User is a student
+        // Get parent registered events
+        List<Event> parentRegisteredEvents = getParentRegisteredEvents();
+        // Display parent registered events for the student
+        viewRegisteredEvents(user, parentRegisteredEvents);
     }
 
-    // Only parents (role 2) can register for events
-    if (user.getRole() == 2) {
-        registerForEvents(user); // Only parents can access register for event page
-    } else {
-        System.out.println();
+
+        viewRegisteredEvents(user, registeredEvents);
+        Home.main(user);
     }
     
-    if (user.getRole() == 1) { // User is a student
-    // Get parent registered events
-    List<Event> parentRegisteredEvents = getParentRegisteredEvents();
-    // Display parent registered events for the student
-    viewRegisteredEvents(user, parentRegisteredEvents);
-}
-
-
-    viewRegisteredEvents(user, registeredEvents);
-    Home.main(user);
-}
-
-
-
 
     private static void displayLiveEvents() {
         //Live Event
@@ -120,30 +118,30 @@ public class ViewEvent {
     }
 
     private static void registerForEvents(User user) {
-    // Only parents (role 2) can register for events
-    if (user.getRole() != 2) {
-        System.out.println("Access denied. Only parents can register for events.");
-        return;
-    }
+        // Only parents (role 2) can register for events
+        if (user.getRole() != 2) {
+            System.out.println("Access denied. Only parents can register for events.");
+            return;
+        }
 
-    boolean continueRegistration = true;
+        boolean continueRegistration = true;
 
-    while (continueRegistration) {
-        System.out.println("\nWould you like to register for an event? (Y/N)");
-        String choice = scanner.nextLine().toUpperCase();
+        while (continueRegistration) {
+            System.out.println("\nWould you like to register for an event? (Y/N)");
+            String choice = scanner.nextLine().toUpperCase();
 
-        if (choice.equals("Y")) {
-            registerForEvent();
-        } else if (choice.equals("N")) {
-            continueRegistration = false;
-        } else {
-            System.out.println("Invalid choice. Please enter 'Y' or 'N'.");
+            if (choice.equals("Y")) {
+                registerForEvent(user);
+            } else if (choice.equals("N")) {
+                continueRegistration = false;
+            } else {
+                System.out.println("Invalid choice. Please enter 'Y' or 'N'.");
+            }
         }
     }
-}
 
 
-    private static void registerForEvent() {
+    private static void registerForEvent(User user) {
         System.out.println("Enter the event title you want to register for:");
         String eventTitle = scanner.nextLine();
 
@@ -153,7 +151,7 @@ public class ViewEvent {
             if (hasConflict(selectedEvent)) {
                 System.out.println("Error: You have another event registered on the same day.");
             } else {
-                points += 5;
+                user.setCurrentPoints(user.getCurrentPoints() + 5);
                 registeredEvents.add(selectedEvent); // Add the event to the list of registered events
                 System.out.println("Successfully registered: " + selectedEvent.getTitle());
             }
@@ -181,22 +179,22 @@ public class ViewEvent {
     }
 
     private static void viewRegisteredEvents(User user, List<Event> parentRegisteredEvents) {
-    System.out.println(" __                              __       _ _           __            _     _                    _   _ \n" +
-            "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    /__\\ ___  __ _(_)___| |_ ___ _ __ ___  __| | / \\\n" +
-            "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / \\/// _ \\/ _` | / __| __/ _ \\ '__/ _ \\/ _` |/  /\n" +
-            "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | / _  \\  __/ (_| | \\__ \\ ||  __/ | |  __/ (_| /\\_/ \n" +
-            "\\__/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, | \\/ \\_/\\___|\\__, |_|___/\\__\\___|_|  \\___|\\__,_\\/   \n" +
-            "                                              |___/             |___/                                  ");
+        System.out.println(" __                              __       _ _           __            _     _                    _   _ \n" +
+                "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    /__\\ ___  __ _(_)___| |_ ___ _ __ ___  __| | / \\\n" +
+                "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / \\/// _ \\/ _` | / __| __/ _ \\ '__/ _ \\/ _` |/  /\n" +
+                "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | / _  \\  __/ (_| | \\__ \\ ||  __/ | |  __/ (_| /\\_/ \n" +
+                "\\__/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, | \\/ \\_/\\___|\\__, |_|___/\\__\\___|_|  \\___|\\__,_\\/   \n" +
+                "                                              |___/             |___/                                  ");
 
-    System.out.println("Total points gained: " + points);
-    if (parentRegisteredEvents.isEmpty()) {
-        System.out.println("No events registered by parents.");
-    } else {
-        for (Event event : parentRegisteredEvents) {
-            System.out.println(event);
+        System.out.println("Total points gained: " + points);
+        if (parentRegisteredEvents.isEmpty()) {
+            System.out.println("No events registered by parents.");
+        } else {
+            for (Event event : parentRegisteredEvents) {
+                System.out.println(event);
+            }
         }
     }
-}
 
 
 }
