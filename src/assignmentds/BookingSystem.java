@@ -29,9 +29,6 @@ public class BookingSystem extends ViewEvent {
         double userX = 0.00;
         double userY = 0.00;
 
-        // Load parent-child relationships
-        Graph parentChildGraph = ParentChildRelationship.loadParentChildRelationships();
-
         // Current date
         // Calculate distances and filter destinations
         List<Destination> filteredDestinations = filterDestinations(destinations, userX, userY);
@@ -42,7 +39,7 @@ public class BookingSystem extends ViewEvent {
         // Get and display children for parent
         System.out.print("Enter parent's username: ");
         String parentUsername = sc.next();
-        List<String> children = parentChildGraph.getChildren(parentUsername);
+        List<String> children = ParentChildRelationship.loadChildren(parentUsername);
 
         if (children.isEmpty()) {
             System.out.println("No children found for the entered username.");

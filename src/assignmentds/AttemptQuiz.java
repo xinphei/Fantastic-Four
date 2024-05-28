@@ -36,7 +36,6 @@ public class AttemptQuiz {
         // Allow student to select and attempt quizzes
         selectAndAttemptQuizzes(selectedThemes, user);
 
-        scanner.close();
         Home.main(user);
     }
 

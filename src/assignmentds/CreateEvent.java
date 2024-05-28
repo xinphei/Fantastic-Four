@@ -1,5 +1,9 @@
 package assignmentds;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
@@ -49,11 +53,12 @@ public class CreateEvent {
         }
         // Write events to file after all events have been entered
         Event.writeEventsToFile("events.txt");
+        updateEventNum(user.getUsername(), numEventsCreated, user.getRole());
         sc.close();
     }
     
-    public static int getNumEventsCreated() {
-        return numEventsCreated;
+    public static int getNumEventsCreated(String username, int role) {
+        return getEventNum(username, role);
     }
 
     private static String getTitle(Scanner sc) {
@@ -104,5 +109,43 @@ public class CreateEvent {
             }
         }
         return times;
+    }
+
+
+    private static int getEventNum(String username, int role) {
+        String sql = "SELECT eventNum FROM userdb.users WHERE username = ? AND role = ?";
+        try (Connection conn = DBOperations.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setInt(2, role);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("eventNum");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving event number: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public static void updateEventNum(String username, int newEventCount, int role) {
+        int currentEventNum = getEventNum(username, role);
+        int updatedEventNum = currentEventNum + newEventCount;
+
+        String sql = "UPDATE userdb.users SET eventNum = ? WHERE username = ? AND role = ?";
+        try (Connection conn = DBOperations.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, updatedEventNum);
+            pstmt.setString(2, username);
+            pstmt.setInt(3, role);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Event number updated successfully.");
+            } else {
+                System.out.println("No records updated, check educator ID.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating event number: " + e.getMessage());
+        }
     }
 }

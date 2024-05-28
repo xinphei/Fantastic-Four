@@ -55,8 +55,6 @@ public class User{
     2- Parents
     3- Educators
      */
-    private ArrayList<User> parents;
-    private ArrayList<User> children;
     private List<BookingSystem> pastBookings;
     private Coordinate locationCoordinate; //The Coordinate class is at above
     private int currentPoints;
@@ -74,12 +72,8 @@ public class User{
         this.password = password;
         this.role = role;
         this.locationCoordinate = locationCoordinate;
-        this.currentPoints = currentPoints; //CHANGED BY DY
-        // changes
+        this.currentPoints = currentPoints;
         this.pointLastUpdated = pointLastUpdated;
-        this.parents = new ArrayList<>();
-        this.children = new ArrayList<>();
-        // changes
         this.friends = new LinkedList<>();
         this.friendRequests = new LinkedList<>();
         this.salt = salt;
@@ -119,22 +113,6 @@ public class User{
 
     public void setRole(int role) {
         this.role = role;
-    }
-
-    public ArrayList<User> getParents() {
-        return parents;
-    }
-
-    public void setParents(ArrayList<User> parents) {
-        this.parents = parents;
-    }
-
-    public ArrayList<User> getChildren() {
-        return children;
-    }
-
-    public void setChildren(ArrayList<User> children) {
-        this.children = children;
     }
 
     public Coordinate getLocationCoordinate() {
@@ -188,45 +166,6 @@ public class User{
         friends.add(friend);
     }
     
-    // Method to add a parent to the user
-    public void addParent(User parent) {
-        parents.add(parent);
-    }
-
-    // Method to add a child to the user
-    public void addChild(User child) {
-        children.add(child);
-    }
-
-    // Method to display user details
-    public void displayUserDetails() {
-        System.out.println("Email: " + email);
-        System.out.println("Username: " + username);
-        System.out.println("Role: " + role);
-        if (!parents.isEmpty()) {
-            System.out.println("Parents: ");
-            for (User parent : parents) {
-                System.out.println("- " + parent.toString());
-            }
-        }
-        if (!children.isEmpty()) {
-            System.out.println("Children: ");
-            for (User child : children) {
-                System.out.println("- " + child.toString());
-            }
-        }
-        System.out.println("Location Coordinate: " + locationCoordinate);
-        System.out.println("Current Points: " + currentPoints);
-    }
-
-    public int getNumQuizzesCreated() {
-       return CreateQuiz.getNumQuizzesCreated();
-    }
-
-    public int getNumEventsCreated() {
-       return CreateEvent.getNumEventsCreated();
-    }
-    
     public List<BookingSystem> getPastBookings() {
         return pastBookings;
     }
@@ -271,28 +210,6 @@ public class User{
             return null;
         }
     }
-
-//    public static User getUser(String email, String hashedPassword) {
-//        try (ResultSet resultSet = DBOperations.getUserDetailsSet(email, hashedPassword)) {
-//            if (resultSet.next()) {
-//                String username = resultSet.getString("username");
-//                byte[] retrievedSalt = resultSet.getBytes("salt");
-//                int role =  resultSet.getInt("role");
-//                double coordinateX = resultSet.getDouble("locationCoordinate_X");
-//                double coordinateY = resultSet.getDouble("locationCoordinate_Y");
-//                int currentPoints = resultSet.getInt("currentPoints");
-//
-//                Coordinate coordinate = new Coordinate(coordinateX, coordinateY);
-//
-//                return new User(username, email, hashedPassword, retrievedSalt, role, coordinate, currentPoints);
-//            }
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
 
     public static User registerUser(Scanner scanner) {
         do {
