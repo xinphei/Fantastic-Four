@@ -1,5 +1,9 @@
 package assignmentds;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,8 +16,8 @@ public class CreateQuiz {
     
     private static final String[] VALID_THEMES = {"Science", "Technology", "Engineering", "Mathematics"};
 
-    public static int getNumQuizzesCreated() {
-        return numQuizCreated;
+    public static int getNumQuizzesCreated(String username, int role) {
+        return getQuizNum(username, role);
     }
     
     public static void main(User user) {
@@ -76,6 +80,8 @@ public class CreateQuiz {
             createAnotherQuiz = input.equalsIgnoreCase("yes");
         }
         Quiz.writeQuizzesToFile("quizzes.txt");
+        updateQuizNum(user.getUsername(), numQuizCreated, user.getRole());
+        Home.main(user);
         sc.close();
     }
 
@@ -95,4 +101,42 @@ public class CreateQuiz {
         Matcher matcher = pattern.matcher(url);
         return matcher.matches();
     }
+
+    private static int getQuizNum(String username, int role) {
+        String sql = "SELECT quizNum FROM userdb.users WHERE username = ? AND role = ?";
+        try (Connection conn = DBOperations.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setInt(2, role);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("quizNum");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving quiz number: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public static void updateQuizNum(String username, int newQuizzesCount, int role) {
+        int currentQuizNum = getQuizNum(username, role);
+        int updatedQuizNum = currentQuizNum + newQuizzesCount;
+
+        String sql = "UPDATE userdb.users SET quizNum = ? WHERE username = ? AND role = ?";
+        try (Connection conn = DBOperations.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, updatedQuizNum);
+            pstmt.setString(2, username);
+            pstmt.setInt(3, role);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("\nQuiz number updated successfully.\n");
+            } else {
+                System.out.println("No records updated, check educator ID.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating quiz number: " + e.getMessage());
+        }
+    }
+
 }
