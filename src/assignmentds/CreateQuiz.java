@@ -81,6 +81,7 @@ public class CreateQuiz {
         }
         Quiz.writeQuizzesToFile("quizzes.txt");
         updateQuizNum(user.getUsername(), numQuizCreated, user.getRole());
+        Home.main(user);
         sc.close();
     }
 
@@ -129,7 +130,7 @@ public class CreateQuiz {
             pstmt.setInt(3, role);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("Quiz number updated successfully.");
+                System.out.println("\nQuiz number updated successfully.\n");
             } else {
                 System.out.println("No records updated, check educator ID.");
             }

@@ -54,6 +54,7 @@ public class CreateEvent {
         // Write events to file after all events have been entered
         Event.writeEventsToFile("events.txt");
         updateEventNum(user.getUsername(), numEventsCreated, user.getRole());
+        Home.main(user);
         sc.close();
     }
     
@@ -140,7 +141,7 @@ public class CreateEvent {
             pstmt.setInt(3, role);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("Event number updated successfully.");
+                System.out.println("\nEvent number updated successfully.\n");
             } else {
                 System.out.println("No records updated, check educator ID.");
             }

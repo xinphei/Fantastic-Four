@@ -69,25 +69,26 @@ public class ViewProfile {
                             if (parentEmail != null) {
                                 System.out.println("Parent found with email : " + parentEmail);
                                 System.out.print("Is this the correct parent? Type 'Yes' to confirm: ");
-                                String confirm = sc.nextLine();
+                                String confirm = sc.next();
+                                sc.nextLine();
                                 if ("yes".equalsIgnoreCase(confirm)) {
                                     if (!relationshipExists(parentUsername, user.getUsername())) {
                                         addRelationship(parentUsername, user.getUsername());
                                         displayProfile(user);
                                     } else {
-                                        System.out.println("Relationship already existed");
+                                        System.out.println("\nRelationship already existed\n");
                                         displayProfile(user);
                                     }
                                 } else {
-                                    System.out.println("Adding parent operation failed");
+                                    System.out.println("\nAdding parent operation failed.\n");
                                     validChoice = false;
                                 }
                             } else {
-                                System.out.println("Parent with the username entered not found.");
+                                System.out.println("\nParent with the username entered not found.\n");
                                 validChoice = false;
                             }
                         } else {
-                            System.out.println("Current account already register with 2 parents.");
+                            System.out.println("\nCurrent account already register with 2 parents.\n");
                             validChoice = false;
                         }
                     } else if (user.getRole() == 2) {
@@ -104,19 +105,19 @@ public class ViewProfile {
                                     addRelationship(user.getUsername(), childUsername);
                                     displayProfile(user);
                                 } else {
-                                    System.out.println("Relationship already existed");
+                                    System.out.println("\nRelationship already existed\n");
                                     displayProfile(user);
                                 }
                             } else {
-                                System.out.println("Adding child operation failed");
+                                System.out.println("\nAdding child operation failed\n");
                                 validChoice = false;
                             }
                         } else {
-                            System.out.println("Parent with the username entered not found.");
+                            System.out.println("\nChild with the username entered not found.\n");
                             validChoice = false;
                         }
                     } else if (user.getRole() == 3) {
-                        System.out.println("Educator does not require adding parents or children");
+                        System.out.println("\nEducator does not require adding parents or children.\n");
                         validChoice = false;
                     }
                 break;
@@ -134,15 +135,15 @@ public class ViewProfile {
     }
 
     private static boolean checkParentMax(String username) {
-        String query = "SELECT COUNT (parent_username) AS parent_count FROM userdb.parentchildrelationship WHERE child_username = ?";
-
+        String query = "SELECT COUNT(parent_username) AS parent_count FROM userdb.parentchildrelationship WHERE child_username = ?";
         try {
             Connection conn = DBOperations.getConnection();
-            PreparedStatement pre = conn.prepareStatement(query);
-            pre.setString(1, username);
-            ResultSet resultSet = pre.executeQuery();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, username);
+            ResultSet resultSet = pstmt.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getInt("parent_count") < 2;
+                int count = resultSet.getInt("parent_count");
+                return count < 2; // Returns true if less than 2 parents are registered
             }
         } catch (SQLException e) {
             System.out.println("Checking parent count error : " + e.getMessage());
@@ -191,7 +192,15 @@ public class ViewProfile {
             preparedStatement.setString(1, parentUsername);
             preparedStatement.setString(2, childUsername);
             preparedStatement.executeUpdate();
-            System.out.println("Relationship added successfully");
+            System.out.println("\n" +
+                    "  _____      _       _   _                 _     _                   _     _          _                                    __       _ _       \n" +
+                    " |  __ \\    | |     | | (_)               | |   (_)                 | |   | |        | |                                  / _|     | | |      \n" +
+                    " | |__) |___| | __ _| |_ _  ___  _ __  ___| |__  _ _ __     __ _  __| | __| | ___  __| |  ___ _   _  ___ ___ ___  ___ ___| |_ _   _| | |_   _ \n" +
+                    " |  _  // _ \\ |/ _` | __| |/ _ \\| '_ \\/ __| '_ \\| | '_ \\   / _` |/ _` |/ _` |/ _ \\/ _` | / __| | | |/ __/ __/ _ \\/ __/ __|  _| | | | | | | | |\n" +
+                    " | | \\ \\  __/ | (_| | |_| | (_) | | | \\__ \\ | | | | |_) | | (_| | (_| | (_| |  __/ (_| | \\__ \\ |_| | (_| (_|  __/\\__ \\__ \\ | | |_| | | | |_| |\n" +
+                    " |_|  \\_\\___|_|\\__,_|\\__|_|\\___/|_| |_|___/_| |_|_| .__/   \\__,_|\\__,_|\\__,_|\\___|\\__,_| |___/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, |\n" +
+                    "                                                  | |                                                                                    __/ |\n" +
+                    "                                                  |_|                                                                                   |___/ \n");
         } catch (SQLException e) {
             System.out.println("Insertion failed : " + e.getMessage());
         }
