@@ -1,8 +1,10 @@
 package assignmentds;
 
 import java.sql.*;
-import java.util.LinkedList;
-import java.util.Properties;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class DBOperations {
 
@@ -167,6 +169,79 @@ public class DBOperations {
         return null; // Return null if no user found with the given username
     }
 
+    //REGISTER FOR EVENT
+    public static boolean registerForEvent(String username, String eventTitle, String eventDate, String startTime, String endTime) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
+
+        LocalDate date = LocalDate.parse(eventDate, dateFormatter);
+        LocalTime castedStartTime = LocalTime.parse(startTime, timeFormatter);
+        LocalTime castedEndTime = LocalTime.parse(endTime, timeFormatter);
+
+        // First, check if the user has already registered for this event
+        if (userAlreadyRegistered(username, eventTitle)) {
+            System.out.println("User has already registered for this event.");
+            return false;
+        }
+
+        // Check for clashes in both event registrations and tour bookings
+        String clashChecking = "SELECT 1 FROM ("
+                + "SELECT event_date, start_time, end_time FROM (SELECT event_date, start_time, end_time FROM userdb.eventregistrations WHERE username = ? "
+                + "UNION "
+                + "SELECT tour_date AS event_date, '00:00:00' AS start_time, '23:59:59' AS end_time FROM userdb.tourbookings WHERE username = ?) AS combined "
+                + "AS subquery"
+                + "WHERE event_date = ? AND NOT (end_time <= ? OR start_time >= ?)";
+
+        try (Connection conn = DBOperations.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(clashChecking)) {
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, username);
+            pstmt.setDate(3, java.sql.Date.valueOf(date));
+            pstmt.setTime(4, java.sql.Time.valueOf(castedEndTime));
+            pstmt.setTime(5, java.sql.Time.valueOf(castedStartTime));
+
+            ResultSet resultSet = pstmt.executeQuery();
+            if (resultSet.next() && resultSet.getInt(1) > 0) {
+                System.out.println("Registration failed: Event time conflicts with an existing registration.");
+                return false;
+            }
+
+            // register event registration if no clash
+            String insertQuery = "INSERT INTO userdb.eventregistrations (username, event_title, event_date, start_time, end_time) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement pstmtInsert = conn.prepareStatement(insertQuery)) {
+                pstmtInsert.setString(1, username);
+                pstmtInsert.setString(2, eventTitle);
+                pstmtInsert.setDate(3, java.sql.Date.valueOf(date));
+                pstmtInsert.setTime(4, java.sql.Time.valueOf(castedStartTime));
+                pstmtInsert.setTime(5, java.sql.Time.valueOf(castedEndTime));
+                pstmtInsert.executeUpdate();
+                System.out.println("Event successfully registered.");
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return false;
+    }
+
+    private static boolean userAlreadyRegistered(String username, String eventTitle) {
+        String query = "SELECT COUNT(*) FROM userdb.eventregistrations WHERE username = ? AND event_title = ?";
+        try (Connection conn = DBOperations.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, eventTitle);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                return true; // User is already registered for this event
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error checking event registration: " + e.getMessage());
+        }
+    }
     
     public static LinkedList<User> fetchFriendsByUsername(String username) {
         LinkedList<User> friends = new LinkedList<>();
@@ -207,6 +282,176 @@ public class DBOperations {
         return false;
     }
 
+    // GET THE LIST OF TOP 3 ONGOING EVENT(TODAY)
+    public static List<Event> getOngoingEvents() {
+        LocalDate today = LocalDate.now();
+
+        List<Event> list = new ArrayList<>();
+        String ongoingEventQuery = "SELECT * FROM userdb.events WHERE event_date = ? ";
+
+        try (Connection conn = DBOperations.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(ongoingEventQuery)) {
+
+            pstmt.setDate(1, java.sql.Date.valueOf(today));
+
+            ResultSet results = pstmt.executeQuery();
+            while (results.next()) {
+                Event event = new Event(
+                        results.getString("event_title"),
+                        results.getString("description"),
+                        results.getString("venue"),
+                        results.getDate("event_date").toLocalDate(),
+                        results.getTime("start_time").toLocalTime(),
+                        results.getTime("end_time").toLocalTime()
+                );
+                list.add(event);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return list;
+    }
+
+    // GET THE LIST OF UPCOMING EVENT(CLOSEST TO THE INSTANT TIME)
+    public static List<Event> getUpcomingEvents() {
+        LocalDate today = LocalDate.now();
+
+        List<Event> list = new ArrayList<>();
+        String upcomingEventsQuery = "SELECT * FROM userdb.events WHERE event_date > ? ORDER BY event_date, start_time LIMIT 3";
+
+        try (Connection conn = DBOperations.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(upcomingEventsQuery)) {
+
+            pstmt.setDate(1, java.sql.Date.valueOf(today));
+
+            ResultSet results = pstmt.executeQuery();
+            while (results.next()) {
+                Event event = new Event(
+                        results.getString("event_title"),
+                        results.getString("description"),
+                        results.getString("venue"),
+                        results.getDate("event_date").toLocalDate(),
+                        results.getTime("start_time").toLocalTime(),
+                        results.getTime("end_time").toLocalTime()
+                );
+                list.add(event);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return list;
+    }
+
+
+    // INSERT NEW EVENT (EDUCATOR)
+    public static boolean insertNewEvent(String eventTitle, String description, String venue, LocalDate eventDate, LocalTime startTime, LocalTime endTime) {
+        // Convert LocalDate and LocalTime to java.sql.Date and java.sql.Time
+        java.sql.Date sqlDate = java.sql.Date.valueOf(eventDate);
+        java.sql.Time sqlStartTime = java.sql.Time.valueOf(startTime);
+        java.sql.Time sqlEndTime = java.sql.Time.valueOf(endTime);
+
+        // Check if the event already exists
+        if (eventExists(eventTitle)) {
+            System.out.println("Event already exists with the same title and date.");
+            return false; // Event already exists
+        }
+
+        // SQL query to insert a new event
+        String insertSql = "INSERT INTO userdb.events (event_title, description, venue, event_date, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBOperations.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+
+            pstmt.setString(1, eventTitle);
+            pstmt.setString(2, description);
+            pstmt.setString(3, venue);
+            pstmt.setDate(4, sqlDate);
+            pstmt.setTime(5, sqlStartTime);
+            pstmt.setTime(6, sqlEndTime);
+
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Event successfully added.");
+                return true;
+            } else {
+                System.out.println("No event was added.");
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error during event insertion: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // CHECK IF THE EVENT WITH SAME TITLE HAS EXISTED BEFORE ADDING
+    private static boolean eventExists(String eventTitle) {
+        String checkSql = "SELECT COUNT(*) FROM userdb.events WHERE event_title = ?";
+        try (Connection conn = DBOperations.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
+
+            pstmt.setString(1, eventTitle);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                return true; // Event already exists
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error during event existence check: " + e.getMessage());
+        }
+        return false;
+    }
+
+    // GET AVAILABLE DATE FOR PARENT TO BOOK SLOT FOR A TOUR (CHECK DB ID CLASH WITH ANY EVENT OR OTHER TOUR)
+    public static List<LocalDate> getAvailableDates(String username) {
+        LocalDate today = LocalDate.now();
+        List<LocalDate> availableDates = new ArrayList<>();
+
+        // Prepare SQL query to check for clashes
+        String clashQuery = "SELECT 1 FROM (" +
+                "SELECT event_date FROM userdb.eventregistrations WHERE username = ? " +
+                "UNION " +
+                "SELECT tour_date AS event_date FROM userdb.tourbookings WHERE username = ?" +
+                ") AS combined WHERE event_date = ?";
+
+        try (Connection conn = DBOperations.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(clashQuery)) {
+
+            // Check each of the next seven days
+            for (int i = 0; i < 7; i++) {
+                LocalDate checkDate = today.plusDays(i);
+                pstmt.setString(1, username);
+                pstmt.setString(2, username);
+                pstmt.setDate(3, java.sql.Date.valueOf(checkDate));
+
+                ResultSet resultSet = pstmt.executeQuery();
+
+                // If no results, no clashes for this day
+                if (!resultSet.next()) {
+                    availableDates.add(checkDate);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+        }
+        return availableDates;
+    }
+
+    // BOOK TOUR METHOD (BASED ON THE DATE SELECTION FROM THE METHOD getAvailableDates)
+    public static boolean bookATour(String childUsername, String destination, String date) {
+        LocalDate date1 = LocalDate.parse(date);
+        java.sql.Date sqlDate = java.sql.Date.valueOf(date1);
+        try {
+            String query = "INSERT INTO userdb.tourbookings (username, destination, tour_date) VALUES (?, ?, ?)";
+            Connection conn = getConnection();
+            PreparedStatement psptm = conn.prepareStatement(query);
+            psptm.setString(1, childUsername);
+            psptm.setString(2, destination);
+            psptm.setDate(3, sqlDate);
+            return true;
+        } catch (SQLException e) {
+            System.out.println("SQL Exception : " + e.getMessage());
+        }
+        return false;
+    }
     
     private static User extractUserFromResultSet(ResultSet resultSet) throws SQLException {
         String email = resultSet.getString("email");

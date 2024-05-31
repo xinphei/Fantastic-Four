@@ -157,6 +157,4 @@ class Event {
         events.add(new Event("Technology in Music Education Workshop", "Explore technology integration in music education", "Music Room", LocalDate.of(2024, 12, 19), LocalTime.of(10, 0), LocalTime.of(12, 0)));
         events.add(new Event("Literature Circle", "Discussion on classic literature works", "Library", LocalDate.of(2024, 12, 31), LocalTime.of(15, 0), LocalTime.of(17, 0)));
     }
-
-
 }

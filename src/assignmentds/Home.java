@@ -57,7 +57,8 @@ public class Home {
                 case '7': // book event
                     if (user.getRole() == 2) {
                         isValidResponse = true;
-                        BookingSystem.main(user);
+                        //RegisterEvent
+//                        BookingSystem.main(user);
                     } else {
                         System.out.println("Access denied. This feature is only accessible to parents.");
                     }
@@ -76,6 +77,14 @@ public class Home {
                         CreateQuiz.main(user);
                     } else {
                         System.out.println("Access denied. This feature is only accessible to educators.");
+                    }
+                    break;
+                case 'a' :
+                    if (user.getRole() == 2) {
+                        isValidResponse = true;
+                        BookingSystem.main(user);
+                    } else {
+                        System.out.println("Access denied. This feature is only accessible for parents.");
                     }
                     break;
                 case '0': // logout
@@ -114,11 +123,13 @@ public class Home {
             System.out.println("4. Attempt Quiz");
             System.out.println("5. Global Leaderboard");
             System.out.println("6. Friend Requests");
+            System.out.println("7. Register for an Event");// NEED TO MODIFY
         }
 
         if (user.getRole() == 2) {
             System.out.println("***ONLY ACCESSIBLE TO PARENTS***");
-            System.out.println("7. Booking An Event");
+            //booking for tour not event
+            System.out.println("a. Booking A Tour"); //NEED TO MODIFY
         }
 
         if (user.getRole() == 3) {
