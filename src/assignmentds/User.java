@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Scanner;
-import assignmentds.Home;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 //Coordinate class
 class Coordinate {
@@ -90,7 +90,7 @@ public class User{
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -139,31 +139,16 @@ public class User{
     public void setPointLastUpdated(Timestamp pointLastUpdated) {
         this.pointLastUpdated = pointLastUpdated;
     }
-    // changes
-    public void sendFriendRequest(User friend) {
-        friendRequests.add(friend);
-    }
+ 
 
-    public void acceptFriendRequest(User friend) {
-        friends.add(friend);
-        friendRequests.remove(friend);
-        friend.addFriend(this);
-    }
-
-    public void removeFriendRequest(User friend) {
-        friendRequests.remove(friend);
-    }
-
-    public List<User> getFriends() {
+    public LinkedList<User> getFriends() {
+        // Fetch friends from the database based on the user's ID
+        LinkedList<User> friends = DBOperations.fetchFriendsByUsername(this.username);
         return friends;
     }
 
-    public LinkedList<User> getFriendRequests() {
-        return friendRequests;
-    }
-
-    private void addFriend(User friend) {
-        friends.add(friend);
+    public void setFriends(LinkedList<User> friends) {
+        this.friends = friends;
     }
     
     public List<BookingSystem> getPastBookings() {
@@ -302,6 +287,19 @@ public class User{
             }   
         }
         while (true);
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return email.equals(user.email); // Assuming email is unique for each user
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
     }
 
 }

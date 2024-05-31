@@ -5,7 +5,7 @@ import java.sql.*;
 public class DBTest {
     private static String url = "jdbc:mysql://127.0.0.1:3306/userdb"; //write your own url, user, and password
     private static String DBuser = "root";
-    private static String pw = "Wee1088@";
+    private static String pw = "2416";
 
     public static void main(String[] args) {
         try (Connection connection = DriverManager.getConnection(url, DBuser, pw)) {

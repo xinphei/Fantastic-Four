@@ -15,6 +15,16 @@ public class ViewProfile {
         displayProfile(user);
         Home.main(user);
     }
+    
+    public static void displayOtherStudentProfile(User user) {
+        System.out.println("Email: " + user.getEmail());
+        System.out.println("Username: " + user.getUsername());
+        System.out.println("Location: (" + user.getLocationCoordinate().getLatitude() + ", " + user.getLocationCoordinate().getLongitude() + ")");
+        System.out.println("Friends: ");
+        for (User friend : user.getFriends()) {
+            System.out.println("- " + friend.getUsername());
+        }
+    }
 
     public static void displayProfile(User user) {
         boolean validChoice = false;
