@@ -56,43 +56,43 @@ public class FriendRequest {
     }
 
     public static void viewOtherStudents(User currentUser, Scanner scanner) {
-    List<User> students = DBOperations.fetchAllStudentsExcept(currentUser.getUsername());
-    LinkedList<User> friends = DBOperations.fetchFriendsByUsername(currentUser.getUsername());
+        List<User> students = DBOperations.fetchAllStudentsExcept(currentUser.getUsername());
+        LinkedList<User> friends = DBOperations.fetchFriendsByUsername(currentUser.getUsername());
     
-    System.out.println(purple_background+"\nStudent List:"+reset);
-    int index = 1;
-    for (User student : students) {
-        if (!friends.contains(student)) { // Check if the student is not already a friend
-            System.out.println(index + ". " + student.getUsername());
-            index++;
-        }
-    }
-    
-    System.out.print("\nChoose a student to view profile (0 to go back): ");
-    int choice = scanner.nextInt();
-    scanner.nextLine(); // Consume the newline
-    
-    if (choice > 0 && choice <= index - 1) { // Validate user's choice
-        User selectedStudent = null;
-        int selectedIndex = 1;
+        System.out.println(purple_background+"\nStudent List:"+reset);
+        int index = 1;
         for (User student : students) {
-            if (!friends.contains(student)) {
-                if (selectedIndex == choice) {
-                    selectedStudent = student;
-                    break;
-                }
-                selectedIndex++;
+            if (!friends.contains(student)) { // Check if the student is not already a friend
+                System.out.println(index + ". " + student.getUsername());
+                index++;
             }
         }
-        if (selectedStudent != null) {
-            viewStudentProfile(selectedStudent, currentUser, scanner); // Pass the selected student to the profile view method
-        } else {
+    
+        System.out.print("\nChoose a student to view profile (0 to go back): ");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline
+    
+        if (choice > 0 && choice <= index - 1) { // Validate user's choice
+            User selectedStudent = null;
+            int selectedIndex = 1;
+            for (User student : students) {
+                if (!friends.contains(student)) {
+                    if (selectedIndex == choice) {
+                        selectedStudent = student;
+                        break;
+                    }
+                    selectedIndex++;
+                }
+            }
+            if (selectedStudent != null) {
+                viewStudentProfile(selectedStudent, currentUser, scanner); // Pass the selected student to the profile view method
+            } else {
+                System.out.println("Invalid choice.");
+            }
+        } else if (choice != 0) {
             System.out.println("Invalid choice.");
         }
-    } else if (choice != 0) {
-        System.out.println("Invalid choice.");
     }
-}
 
 
     private static void viewStudentProfile(User student, User currentUser, Scanner scanner) {
@@ -124,66 +124,66 @@ public class FriendRequest {
     }
 
     private static void manageFriendRequests(User currentUser, Scanner scanner) {
-    // Check if the student has any friend requests
-    LinkedList<User> friendRequests = DBOperations.fetchFriendRequests(currentUser.getUsername());
-    if (!friendRequests.isEmpty()) {
-        System.out.println("\nYou have received friend requests from:");
-        int count = 1;
-        for (User sender : friendRequests) {
-            System.out.println(count + ". " + sender.getUsername());
-            count++;
-        }
-        // Prompt the user to select a friend request
-        System.out.print("Choose the number of the friend request to manage (0 to go back): ");
-        int requestNumber = scanner.nextInt();
-        scanner.nextLine(); // Consume newline left-over
-
-        if (requestNumber > 0 && requestNumber <= friendRequests.size()) {
-            User sender = friendRequests.get(requestNumber - 1);
-            System.out.println("\nSelected friend request from: " + sender.getUsername());
-            System.out.println("1. Accept");
-            System.out.println("2. Reject");
-            System.out.print("Choose an action: ");
-            int choice = scanner.nextInt();
+        // Check if the student has any friend requests
+        LinkedList<User> friendRequests = DBOperations.fetchFriendRequests(currentUser.getUsername());
+        if (!friendRequests.isEmpty()) {
+            System.out.println("\nYou have received friend requests from:");
+            int count = 1;
+            for (User sender : friendRequests) {
+                System.out.println(count + ". " + sender.getUsername());
+                count++;
+            }
+            // Prompt the user to select a friend request
+            System.out.print("Choose the number of the friend request to manage (0 to go back): ");
+            int requestNumber = scanner.nextInt();
             scanner.nextLine(); // Consume newline left-over
 
-            switch (choice) {
-                case 1:
-                    // Accept friend request
-                    accept(currentUser, sender);
-                    break;
-                case 2:
-                    // Reject friend request
-                    reject(currentUser, sender);
-                    break;
-                default:
-                    System.out.println("Invalid action.");
+            if (requestNumber > 0 && requestNumber <= friendRequests.size()) {
+                User sender = friendRequests.get(requestNumber - 1);
+                System.out.println("\nSelected friend request from: " + sender.getUsername());
+                System.out.println("1. Accept");
+                System.out.println("2. Reject");
+                System.out.print("Choose an action: ");
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline left-over
+
+                switch (choice) {
+                    case 1:
+                        // Accept friend request
+                        accept(currentUser, sender);
+                        break;
+                    case 2:
+                        // Reject friend request
+                        reject(currentUser, sender);
+                        break;
+                    default:
+                        System.out.println("Invalid action.");
+                }
+            } else if (requestNumber == 0) {
+                // Return to main menu
+            } else {
+                System.out.println("Invalid friend request number.");
             }
-        } else if (requestNumber == 0) {
-            // Return to main menu
         } else {
-            System.out.println("Invalid friend request number.");
+            System.out.println("\nNo friend requests.");
         }
-    } else {
-        System.out.println("\nNo friend requests.");
     }
-}
 
     private static void accept(User currentUser, User sender) {
-    // Accept the friend request by updating the database
-    DBOperations.acceptFriendRequest(sender, currentUser);
+        // Accept the friend request by updating the database
+        DBOperations.acceptFriendRequest(sender, currentUser);
 
-    // Print a success message
-    System.out.println(yellow + sender.getUsername() + reset + " is now your friend.");
-}
+        // Print a success message
+        System.out.println(yellow + sender.getUsername() + reset + " is now your friend.");
+    }
 
-private static void reject(User currentUser, User sender) {
-    // Reject the friend request by updating the database
-    DBOperations.rejectFriendRequest(sender, currentUser);
+    private static void reject(User currentUser, User sender) {
+        // Reject the friend request by updating the database
+        DBOperations.rejectFriendRequest(sender, currentUser);
 
-    // Print a success message
-    System.out.println(yellow + sender.getUsername() +reset + "'s request removed.");
-}
+        // Print a success message
+        System.out.println(yellow + sender.getUsername() +reset + "'s request removed.");
+    }
 
     private static void sendFriendRequest(User student, User currentUser) {
         if (currentUser != null) {

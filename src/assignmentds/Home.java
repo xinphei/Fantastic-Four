@@ -92,6 +92,7 @@ public class Home {
     private static void displayWelcomeMessage() {
         String reset = "\u001B[0m";
         String green = "\u001B[32m";
+        System.out.println("");
         System.out.println(green + "  _   _     U  ___ u  __  __  U _____ u  ____       _       ____  U _____ u \n" +
                 " |'| |'|     \\/\"_ \\/U|' \\/ '|u\\| ___\"|/U|  _\"\\ uU  /\"\\  uU /\"___|u\\| ___\"|/ \n" +
                 "/| |_| |\\    | | | |\\| |\\/| |/ |  _|\"  \\| |_) |/ \\/ _ \\/ \\| |  _ / |  _|\"   \n" +

@@ -22,6 +22,9 @@ public class AttemptQuiz {
     private static Scanner scanner = new Scanner(System.in);
     private static final String COMPLETED_QUIZZES_FILE = "completed_quizzes.txt";
     private static List<String> completedQuizzes;
+    static String red = "\u001B[31m";
+    static String green = "\u001B[32m";
+    static String reset = "\u001B[0m";
 
     public static void main(User user) {
         System.out.println("   _   _   _                       _       ____       _     ");     
@@ -134,7 +137,7 @@ public class AttemptQuiz {
             for (Quiz quiz : availableQuizzes) {
                 if (quiz.getTheme().equalsIgnoreCase(theme)) {
                     quizInfo[index][0] = quiz.getTitle(); // Quiz name
-                    quizInfo[index][1] = completedQuizzes.contains(quiz.getTitle()) ? "Complete" : "Incomplete"; // Completion status
+                    quizInfo[index][1] = completedQuizzes.contains(quiz.getTitle()) ? green+"Complete"+reset : red+"Incomplete"+reset; // Completion status
                     System.out.println(counter + ". " + quiz.getTitle() + " [" + quizInfo[index][1] + "] ");
                     counter++;
                     index++;
@@ -196,7 +199,7 @@ public class AttemptQuiz {
 
                             // Update points in the database
                             DBOperations.updateCurrentPoints(user.getEmail(), update, now);
-                            System.out.println("Your existing points: " + update);
+                            System.out.println("Your existing points: " + green+ update + reset);
                         } else {
                             System.out.println("Quiz not found. Please select a valid quiz.");
                         }
