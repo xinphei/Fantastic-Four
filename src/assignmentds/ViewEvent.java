@@ -9,7 +9,6 @@ import java.util.Scanner;
 public class ViewEvent {
     private static List<Event> events = Event.getEvents();
     private static List<Event> registeredEvents = new ArrayList<>(); // New list to store registered events
-    private static int points = 0;
     private static Scanner scanner = new Scanner(System.in);
     private static LocalDate currentDate = LocalDate.of(2024, 5, 18); // Current date
 
@@ -38,8 +37,6 @@ public class ViewEvent {
         // Display parent registered events for the student
         //viewRegisteredEvents(user, parentRegisteredEvents);
     }
-
-
         viewRegisteredEvents(user, registeredEvents);
         Home.main(user);
     }
@@ -54,18 +51,16 @@ public class ViewEvent {
                 "\\/ /_/ \\__,_| .__/| .__/ \\___|_| |_|_|_| |_|\\__, |  \\/   \\___/ \\__,_|\\__,_|\\__, \\/   \n" +
                 "            |_|   |_|                       |___/                          |___/   \n");
 
-        boolean eventFound = false;
-        for (Event event : events) {
-             if (event.getDate().isEqual(currentDate)) {
+        List<Event> ongoingEvents = DBOperations.getOngoingEvents();
+        if (ongoingEvents.isEmpty()) {
+            System.out.println("\nOopsie, there are no events today.");
+        } else {
+            for (Event event : ongoingEvents) {
                 System.out.println(event);
-                eventFound = true;
             }
         }
-
-        if (!eventFound) {
-            System.out.println("\nOopsie, there are no events today.");
-        }
     }
+
 
     private static void displayClosestUpcomingEvents() {
         int count = 0;
@@ -75,8 +70,11 @@ public class ViewEvent {
                 "\\ \\_/ / |_) | (_| (_) | | | | | | | | | | (_| | //__  \\ V /  __/ | | | |_\\__ \\_ \n" +
                 " \\___/| .__/ \\___\\___/|_| |_| |_|_|_| |_|\\__, | \\__/   \\_/ \\___|_| |_|\\__|___(_)\n" +
                 "      |_|                                |___/                                  \n");
-        for (Event event : events) {
-            if (event.getDate().isAfter(currentDate)) {
+        List<Event> upcomingEvents = DBOperations.getUpcomingEvents();
+        if (upcomingEvents.isEmpty()) {
+            System.out.println("No upcoming events found.");
+        } else {
+            for (Event event : upcomingEvents){
                 if (count == 0) {
                     System.out.println("   ___                             _        _    \n" +
                             "  | __|   __ __    ___    _ _     | |_     / |   \n" +
@@ -151,9 +149,16 @@ public class ViewEvent {
             if (hasConflict(selectedEvent)) {
                 System.out.println("Error: You have another event registered on the same day.");
             } else {
-                user.setCurrentPoints(user.getCurrentPoints() + 5);
-                registeredEvents.add(selectedEvent); // Add the event to the list of registered events
-                System.out.println("Successfully registered: " + selectedEvent.getTitle());
+                boolean registrationSuccess = DBOperations.registerForEvent(user.getUsername(), 
+                        selectedEvent.getTitle(),
+                        selectedEvent.getDate().toString(), 
+                        selectedEvent.getStartTime().toString(), 
+                        selectedEvent.getEndTime().toString());
+                if (registrationSuccess) {
+                    user.setCurrentPoints(user.getCurrentPoints() + 5);
+                    registeredEvents.add(selectedEvent);
+                    System.out.println("Successfully registered: " + selectedEvent.getTitle());
+                }
             }
         } else {
             System.out.println("Event not found.");
@@ -161,7 +166,10 @@ public class ViewEvent {
     }
 
     private static Event findEventByTitle(String eventTitle) {
-        for (Event event : events) {
+        List<Event> allEvents = new ArrayList<>();
+        allEvents.addAll(DBOperations.getOngoingEvents());
+        allEvents.addAll(DBOperations.getUpcomingEvents());
+        for (Event event : allEvents) {
             if (event.getTitle().equalsIgnoreCase(eventTitle)) {
                 return event;
             }
@@ -170,6 +178,7 @@ public class ViewEvent {
     }
 
     private static boolean hasConflict(Event selectedEvent) {
+        // Check the registeredEvents list for conflicts
         for (Event event : registeredEvents) {
             if (event.getDate().isEqual(selectedEvent.getDate())) {
                 return true;
@@ -186,7 +195,7 @@ public class ViewEvent {
                 "\\__/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, | \\/ \\_/\\___|\\__, |_|___/\\__\\___|_|  \\___|\\__,_\\/   \n" +
                 "                                              |___/             |___/                                  ");
 
-        System.out.println("Total points gained: " + points);
+        System.out.println("Total points gained: " + user.getCurrentPoints());
         if (parentRegisteredEvents.isEmpty()) {
             System.out.println("No events registered by parents.");
         } else {
@@ -195,6 +204,4 @@ public class ViewEvent {
             }
         }
     }
-
-
 }

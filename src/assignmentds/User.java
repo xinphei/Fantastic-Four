@@ -139,8 +139,15 @@ public class User{
     public void setPointLastUpdated(Timestamp pointLastUpdated) {
         this.pointLastUpdated = pointLastUpdated;
     }
- 
+    
+     public double getLatitude() {
+        return this.locationCoordinate.getLatitude();
+    }
 
+    public double getLongitude() {
+        return this.locationCoordinate.getLongitude();
+    }
+ 
     public LinkedList<User> getFriends() {
         // Fetch friends from the database based on the user's ID
         LinkedList<User> friends = DBOperations.fetchFriendsByUsername(this.username);

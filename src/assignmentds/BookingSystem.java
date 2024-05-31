@@ -21,18 +21,17 @@ public class BookingSystem extends ViewEvent {
         this.date = date;
     }
 
-    public static void main(String[] args) {
+    public static void main(User user) {
         Scanner sc = new Scanner(System.in);
         readFile();
 
-        // Assume user coordinates
-        double userX = 0.00;
-        double userY = 0.00;
+        double userX = user.getLatitude();
+        double userY = user.getLongitude();
 
         // Current date
         // Calculate distances and filter destinations
         List<Destination> filteredDestinations = filterDestinations(destinations, userX, userY);
-
+        
         // Display booking page
         displayBookingPage(filteredDestinations, currentDate);
 
@@ -60,7 +59,26 @@ public class BookingSystem extends ViewEvent {
 
         String selectedChild = children.get(selectedChildIndex - 1);
 
-        // Display booking page
+        // Get available dates for booking
+        List<LocalDate> availableDates = DBOperations.getAvailableDates(parentUsername);
+        // Display available dates
+        System.out.println("Available Dates for Booking:");
+        for (int i = 0; i < availableDates.size(); i++) {
+            System.out.println("[" + (i + 1) + "] " + availableDates.get(i));
+        }
+        
+        // Prompt user to select a date for booking
+        System.out.print("\nEnter a date for booking (choose from 1 to " + availableDates.size() + "): ");
+        int selectedDateIndex = sc.nextInt();
+        if (selectedDateIndex < 1 || selectedDateIndex > availableDates.size()) {
+            System.out.println("Invalid date selection. Please choose a valid date.");
+            return;
+        }
+        
+        // Get the selected date
+        LocalDate selectedDate = availableDates.get(selectedDateIndex - 1);
+
+        // Prompt user to select a destination
         System.out.print("Enter destination ID for booking: ");
         int selectedDestinationId = sc.nextInt();
         if (selectedDestinationId < 1 || selectedDestinationId > filteredDestinations.size()) {
@@ -72,25 +90,10 @@ public class BookingSystem extends ViewEvent {
         System.out.println("=========================================================================");
         System.out.println("\nSelected booking for: " + selectedDestination.getName() + " for child " + selectedChild);
 
-        // Calculate available time slots
-        List<LocalDate> availableTimeSlots = calculateAvailableTimeSlots(currentDate, null);
-
-        // Display available time slots
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        System.out.println("\nAvailable Time Slots:");
-        for (int i = 0; i < availableTimeSlots.size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + formatter.format(availableTimeSlots.get(i)));
-        }
-
-        System.out.print("\nEnter a time slot: ");
-        int selectedTimeSlot = sc.nextInt();
-        if (selectedTimeSlot < 1 || selectedTimeSlot > availableTimeSlots.size()) {
-            System.out.println("Invalid time slot. Please enter a valid time slot.");
-            return;
-        }
-
-        LocalDate selectedDate = availableTimeSlots.get(selectedTimeSlot - 1);
-        System.out.println("\nBooking confirmed for " + selectedDestination.getName() + " on " + formatter.format(selectedDate) + " for child " + selectedChild);
+        // Book the tour
+        boolean bookingSuccess = DBOperations.bookATour(selectedChild, selectedDestination.getName(), selectedDate.toString());
+        if (bookingSuccess) {
+            System.out.println("\nBooking confirmed for " + selectedDestination.getName() + " on " + selectedDate + " for child " + selectedChild);
 
         System.out.println("                                  __       _ _         _                 _            _   _ \n" +
                 " ___ _   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _  | |__   ___   ___ | | _____  __| | / \\\n" +
@@ -99,7 +102,9 @@ public class BookingSystem extends ViewEvent {
                 "|___/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, | |_.__/ \\___/ \\___/|_|\\_\\___|\\__,_\\/   \n" +
                 "                                               |___/                                        ");
 
-        // Close the scanner
+        } else {
+            System.out.println("Failed to book the tour. Please try again.");
+        }
         sc.close();
     }
 

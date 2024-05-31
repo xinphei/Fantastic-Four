@@ -15,11 +15,11 @@ public class CreateEvent {
 
     public static void main(User user) {
         System.out.println("   ___               _           __                 _       ___                   \n" +
-                "  / __\\ __ ___  __ _| |_ ___    /__\\_   _____ _ __ | |_    / _ \\__ _  __ _  ___ _ \n" +
-                " / / | '__/ _ \\/ _` | __/ _ \\  /_\\ \\ \\ / / _ \\ '_ \\| __|  / /_)/ _` |/ _` |/ _ (_)\n" +
-                "/ /__| | |  __/ (_| | ||  __/ //__  \\ V /  __/ | | | |_  / ___/ (_| | (_| |  __/_ \n" +
-                "\\____/_|  \\___|\\__,_|\\__\\___| \\__/   \\_/ \\___|_| |_|\\__| \\/    \\__,_|\\__, |\\___(_)\n" +
-                "                                                                     |___/        ");
+                           "  / __\\ __ ___  __ _| |_ ___    /__\\_   _____ _ __ | |_    / _ \\__ _  __ _  ___ _ \n" +
+                           " / / | '__/ _ \\/ _` | __/ _ \\  /_\\ \\ \\ / / _ \\ '_ \\| __|  / /_)/ _` |/ _` |/ _ (_)\n" +
+                           "/ /__| | |  __/ (_| | ||  __/ //__  \\ V /  __/ | | | |_  / ___/ (_| | (_| |  __/_ \n" +
+                           "\\____/_|  \\___|\\__,_|\\__\\___| \\__/   \\_/ \\___|_| |_|\\__| \\/    \\__,_|\\__, |\\___(_)\n" +
+                           "                                                                     |___/        ");
 
         Event.initializeEvents();
         Scanner sc = new Scanner(System.in);
@@ -33,6 +33,7 @@ public class CreateEvent {
             LocalTime[] times = getTimes(sc);
 
             Event newEvent = new Event(title, description, venue, date, times[0], times[1]);
+            boolean eventAdded = DBOperations.insertNewEvent(title, description, venue, date, times[0], times[1]);
             Event.addEvent(newEvent);
             
             numEventsCreated++;
@@ -51,8 +52,7 @@ public class CreateEvent {
             String input = sc.nextLine();
             createAnotherEvent = input.equalsIgnoreCase("yes");
         }
-        // Write events to file after all events have been entered
-        Event.writeEventsToFile("events.txt");
+
         updateEventNum(user.getUsername(), numEventsCreated, user.getRole());
         Home.main(user);
         sc.close();

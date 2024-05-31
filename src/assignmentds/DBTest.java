@@ -3,9 +3,9 @@ package assignmentds;
 import java.sql.*;
 
 public class DBTest {
-    private static String url = "jdbc:mysql://127.0.0.1:3306/userdb"; //write your own url, user, and password
+    private static String url = "jdbc:mysql://localhost:3306/userdb"; //write your own url, user, and password
     private static String DBuser = "root";
-    private static String pw = "2416";
+    private static String pw = "password";
 
     public static void main(String[] args) {
         try (Connection connection = DriverManager.getConnection(url, DBuser, pw)) {

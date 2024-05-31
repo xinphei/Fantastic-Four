@@ -8,9 +8,9 @@ import java.util.*;
 
 public class DBOperations {
 
-    private static String url = "jdbc:mysql://127.0.0.1:3306/userdb"; //url format is jdbc:mysql://<database number>/<database name>
-    private static String DBuser = "root"; //user usually is "root"
-    private static String pw = "2416"; //your password
+    private static String url = "jdbc:mysql://localhost:3306/userdb"; //write your own url, user, and password
+    private static String DBuser = "root";
+    private static String pw = "password";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, DBuser, pw);
@@ -241,6 +241,7 @@ public class DBOperations {
         } catch (SQLException e) {
             System.out.println("Database error checking event registration: " + e.getMessage());
         }
+        return false;
     }
     
     public static LinkedList<User> fetchFriendsByUsername(String username) {

@@ -74,43 +74,6 @@ class Event {
                 "\n";
     }
     
-    public static void writeEventsToFile(String filename) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
-            for (Event event : events) {
-                // Writing each event's details separated by commas
-                writer.println(event.getTitle() + "," +
-                        event.getDescription() + "," +
-                        event.getVenue() + "," +
-                        event.getDate() + "," +
-                        event.getStartTime() + "," +
-                        event.getEndTime());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    // Method to read events from a text file
-    public static void readEventsFromFile(String filename) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Splitting each line by tab to extract event details
-                String[] parts = line.split("\t");
-                String title = parts[0];
-                String description = parts[1];
-                String venue = parts[2];
-                LocalDate date = LocalDate.parse(parts[3]);
-                LocalTime startTime = LocalTime.parse(parts[4]);
-                LocalTime endTime = LocalTime.parse(parts[5]);
-                events.add(new Event(title, description, venue, date, startTime, endTime));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void initializeEvents() {
         // Initialize events
         //April
