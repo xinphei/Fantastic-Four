@@ -3,7 +3,9 @@ package assignmentds;
 import assignmentds.Quiz;
 
 import java.awt.Desktop;
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -11,11 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.sql.Timestamp;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 public class AttemptQuiz {
     private static List<Quiz> availableQuizzes = Quiz.getQuizzes();
-    private static List<String> completedQuizzes = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
+    private static final String COMPLETED_QUIZZES_FILE = "completed_quizzes.txt";
+    private static List<String> completedQuizzes;
+    static String red = "\u001B[31m";
+    static String green = "\u001B[32m";
+    static String reset = "\u001B[0m";
 
     public static void main(User user) {
         System.out.println("   _   _   _                       _       ____       _     ");     
@@ -26,6 +35,9 @@ public class AttemptQuiz {
         System.out.println("                            |_|");                            
 
         System.out.println("Welcome to the Quiz Attempter!");
+        
+        // Load complete quizzes from file
+        completedQuizzes = loadCompletedQuizzes(user.getUsername());
         
         // Initialize quizzes
         Quiz.initializeQuiz();
@@ -38,6 +50,32 @@ public class AttemptQuiz {
 
         Home.main(user);
     }
+    
+    private static List<String> loadCompletedQuizzes(String username) {
+        List<String> completedQuizzes = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(COMPLETED_QUIZZES_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith(username + ": ")) {
+                    completedQuizzes.add(line.substring(username.length() + 2)); // Remove username prefix
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading completed quizzes: " + e.getMessage());
+        }
+        return completedQuizzes;
+    }
+    
+    private static void saveCompletedQuizzes(String username, List<String> completedQuizzes) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(COMPLETED_QUIZZES_FILE, true))) {
+        for (String quiz : completedQuizzes) {
+            writer.write(username + ": " + quiz + System.lineSeparator());
+        }
+    } catch (IOException e) {
+        System.out.println("Error saving completed quizzes: " + e.getMessage());
+    }
+}
+
 
     private static List<String> selectThemes() {
         List<String> selectedThemes = new ArrayList<>();
@@ -99,7 +137,7 @@ public class AttemptQuiz {
             for (Quiz quiz : availableQuizzes) {
                 if (quiz.getTheme().equalsIgnoreCase(theme)) {
                     quizInfo[index][0] = quiz.getTitle(); // Quiz name
-                    quizInfo[index][1] = completedQuizzes.contains(quiz.getTitle()) ? "Complete" : "Incomplete"; // Completion status
+                    quizInfo[index][1] = completedQuizzes.contains(quiz.getTitle()) ? green+"Complete"+reset : red+"Incomplete"+reset; // Completion status
                     System.out.println(counter + ". " + quiz.getTitle() + " [" + quizInfo[index][1] + "] ");
                     counter++;
                     index++;
@@ -150,8 +188,10 @@ public class AttemptQuiz {
                             // Open the quiz URL in a web browser
                             openQuizUrl(selectedQuiz.getQuizizzLink());
                             
-                            // Mark the quiz as completed
+                            // When a quiz is completed:
                             completedQuizzes.add(selectedQuiz.getTitle());
+                            saveCompletedQuizzes(user.getUsername(), completedQuizzes);
+                            
                             // Award 2 marks to the student
                             System.out.println("Congratulations! You have completed the quiz. You have been awarded 2 marks.");
                             update += 2;
@@ -159,7 +199,7 @@ public class AttemptQuiz {
 
                             // Update points in the database
                             DBOperations.updateCurrentPoints(user.getEmail(), update, now);
-                            System.out.println("Your existing points: " + update);
+                            System.out.println("Your existing points: " + green+ update + reset);
                         } else {
                             System.out.println("Quiz not found. Please select a valid quiz.");
                         }
