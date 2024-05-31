@@ -5,11 +5,17 @@ import java.util.List;
 import java.util.Scanner;
 
 public class FriendRequest {
+    
+    static String reset = "\u001B[0m";
+    static String purple_background ="\u001B[45m";
+    static String yellow = "\u001B[33m";
 
     public static void main(User user) {
         User currentUser = user; 
         Scanner scanner = new Scanner(System.in);
         int option = -1;
+        
+        
 
         while (option != 0) {
             displayMenu();
@@ -33,7 +39,16 @@ public class FriendRequest {
     }
 
     private static void displayMenu() {
-        System.out.println("\nWelcome to Friend Request System!");
+        System.out.println("");
+        System.out.println(yellow+"  _______   _______    __     _______  _____  ___   ________    ________      ___      ___       __      _____  ___        __       _______    _______  ___      ___   _______  _____  ___  ___________  \n" +
+        " /\"     \"| /\"      \\  |\" \\   /\"     \"|(\\\"   \\|\"  \\ |\"      \"\\  /\"       )    |\"  \\    /\"  |     /\"\"\\    (\\\"   \\|\"  \\      /\"\"\\     /\" _   \"|  /\"     \"||\"  \\    /\"  | /\"     \"|(\\\"   \\|\"  \\(\"     _   \") \n" +
+        "(: ______)|:        | ||  | (: ______)|.\\\\   \\    |(.  ___  :)(:   \\___/      \\   \\  //   |    /    \\   |.\\\\   \\    |    /    \\   (: ( \\___) (: ______) \\   \\  //   |(: ______)|.\\\\   \\    |)__/  \\\\__/  \n" +
+        " \\/    |  |_____/   ) |:  |  \\/    |  |: \\.   \\\\  ||: \\   ) || \\___  \\        /\\\\  \\/.    |   /' /\\  \\  |: \\.   \\\\  |   /' /\\  \\   \\/ \\       \\/    |   /\\\\  \\/.    | \\/    |  |: \\.   \\\\  |   \\\\_ /     \n" +
+        " // ___)   //      /  |.  |  // ___)_ |.  \\    \\. |(| (___\\ ||  __/  \\\\      |: \\.        |  //  __'  \\ |.  \\    \\. |  //  __'  \\  //  \\ ___  // ___)_ |: \\.        | // ___)_ |.  \\    \\. |   |.  |     \n" +
+        "(:  (     |:  __   \\  /\\  |\\(:      \"||    \\    \\ ||:       :) /\" \\   :)     |.  \\    /:  | /   /  \\\\  \\|    \\    \\ | /   /  \\\\  \\(:   _(  _|(:      \"||.  \\    /:  |(:      \"||    \\    \\ |   \\:  |     \n" +
+        " \\__/     |__|  \\___)(__\\_|_)\\_______) \\___|\\____\\)(________/ (_______/      |___|\\__/|___|(___/    \\___)\\___|\\____\\)(___/    \\___)\\_______)  \\_______)|___|\\__/|___| \\_______) \\___|\\____\\)    \\__|     \n" +
+        "                                                                                                                                                                                                         "+reset);
+        System.out.println("\nWelcome to Friends Management System!");
         System.out.println("1. View Other Students");
         System.out.println("2. Manage Friend Requests");
         System.out.println("0. Exit");
@@ -44,7 +59,7 @@ public class FriendRequest {
     List<User> students = DBOperations.fetchAllStudentsExcept(currentUser.getUsername());
     LinkedList<User> friends = DBOperations.fetchFriendsByUsername(currentUser.getUsername());
     
-    System.out.println("Other Students:");
+    System.out.println(purple_background+"\nStudent List:"+reset);
     int index = 1;
     for (User student : students) {
         if (!friends.contains(student)) { // Check if the student is not already a friend
@@ -52,16 +67,28 @@ public class FriendRequest {
             index++;
         }
     }
-    User selectedStudent = null;
     
-    System.out.print("Choose a student to view profile (0 to go back): ");
+    System.out.print("\nChoose a student to view profile (0 to go back): ");
     int choice = scanner.nextInt();
     scanner.nextLine(); // Consume the newline
     
-    if (choice > 0 && choice <= students.size()) {
-        selectedStudent = students.get(choice - 1);
-        viewStudentProfile(selectedStudent, currentUser, scanner);
-        
+    if (choice > 0 && choice <= index - 1) { // Validate user's choice
+        User selectedStudent = null;
+        int selectedIndex = 1;
+        for (User student : students) {
+            if (!friends.contains(student)) {
+                if (selectedIndex == choice) {
+                    selectedStudent = student;
+                    break;
+                }
+                selectedIndex++;
+            }
+        }
+        if (selectedStudent != null) {
+            viewStudentProfile(selectedStudent, currentUser, scanner); // Pass the selected student to the profile view method
+        } else {
+            System.out.println("Invalid choice.");
+        }
     } else if (choice != 0) {
         System.out.println("Invalid choice.");
     }
@@ -69,13 +96,13 @@ public class FriendRequest {
 
 
     private static void viewStudentProfile(User student, User currentUser, Scanner scanner) {
-        System.out.println("Viewing Profile of " + student.getUsername());
+        System.out.println("\nViewing Profile of " + yellow + student.getUsername()+reset);
 
         boolean value = true;
 
         do {
             ViewProfile.displayOtherStudentProfile(student);
-            System.out.println("Send Friend Request to " + student.getUsername());
+            System.out.println("\nSend Friend Request to " + yellow +student.getUsername() + reset);
             System.out.println("1. Yes");
             System.out.println("2. No");
             int response = scanner.nextInt();
@@ -113,8 +140,8 @@ public class FriendRequest {
 
         if (requestNumber > 0 && requestNumber <= friendRequests.size()) {
             User sender = friendRequests.get(requestNumber - 1);
-            System.out.println("Selected friend request from: " + sender.getUsername());
-            System.out.println("\n1. Accept");
+            System.out.println("\nSelected friend request from: " + sender.getUsername());
+            System.out.println("1. Accept");
             System.out.println("2. Reject");
             System.out.print("Choose an action: ");
             int choice = scanner.nextInt();
@@ -138,7 +165,7 @@ public class FriendRequest {
             System.out.println("Invalid friend request number.");
         }
     } else {
-        System.out.println("No friend requests.");
+        System.out.println("\nNo friend requests.");
     }
 }
 
@@ -147,7 +174,7 @@ public class FriendRequest {
     DBOperations.acceptFriendRequest(sender, currentUser);
 
     // Print a success message
-    System.out.println(sender.getUsername() + " is now your friend.");
+    System.out.println(yellow + sender.getUsername() + reset + " is now your friend.");
 }
 
 private static void reject(User currentUser, User sender) {
@@ -155,16 +182,16 @@ private static void reject(User currentUser, User sender) {
     DBOperations.rejectFriendRequest(sender, currentUser);
 
     // Print a success message
-    System.out.println(sender.getUsername() + "'s request removed.");
+    System.out.println(yellow + sender.getUsername() +reset + "'s request removed.");
 }
 
     private static void sendFriendRequest(User student, User currentUser) {
         if (currentUser != null) {
             if (DBOperations.isFriend(currentUser.getUsername(), student.getUsername())) {
-                System.out.println("You are already friends with " + student.getUsername());
+                System.out.println("You are already friends with " + yellow + student.getUsername()+reset);
             } else {
                 DBOperations.sendFriendRequest(currentUser, student);
-                System.out.println("Friend request sent to " + student.getUsername());
+                System.out.println("Friend request sent to " + yellow + student.getUsername()+reset);
             }
         } else {
             System.out.println("Please log in first.");
