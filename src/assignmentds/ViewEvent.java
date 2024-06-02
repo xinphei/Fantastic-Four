@@ -25,12 +25,6 @@ public class ViewEvent {
             System.out.println();
         }
 
-        if (user.getRole() == 1) { // User is a student
-        // Get parent registered events
-        //List<Event> parentRegisteredEvents = getParentRegisteredEvents();
-        // Display parent registered events for the student
-        //viewRegisteredEvents(user, parentRegisteredEvents);
-    }
         viewRegisteredEvents(user, registeredEvents);
         Home.main(user);
     }
@@ -110,9 +104,8 @@ public class ViewEvent {
     }
 
     private static void registerForEvents(User user) {
-        // Only parents (role 2) can register for events
-        if (user.getRole() != 2) {
-            System.out.println("Access denied. Only parents can register for events.");
+        if (user.getRole() != 1) {
+            System.out.println("Access denied. Only student can register for events.");
             return;
         }
 
