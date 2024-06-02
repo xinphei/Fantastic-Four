@@ -407,7 +407,18 @@ public class DBOperations {
             psptm.setString(1, childUsername);
             psptm.setString(2, destination);
             psptm.setDate(3, sqlDate);
-            return true;
+            
+            // Execute the query
+            int rowsAffected = psptm.executeUpdate();
+        
+            // Close PreparedStatement and Connection
+            psptm.close();
+            conn.close();
+        
+            // Check if any rows were affected (i.e., if the insertion was successful)
+            if (rowsAffected > 0) {
+                return true;
+            }
         } catch (SQLException e) {
             System.out.println("SQL Exception : " + e.getMessage());
         }

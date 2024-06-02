@@ -36,12 +36,12 @@ public class BookingSystem extends ViewEvent {
         displayBookingPage(filteredDestinations, currentDate);
 
         // Get and display children for parent
-        System.out.print("Enter parent's username: ");
-        String parentUsername = sc.next();
+        String parentUsername = user.getUsername();
         List<String> children = ParentChildRelationship.loadChildren(parentUsername);
 
         if (children.isEmpty()) {
             System.out.println("No children found for the entered username.");
+            
             return;
         }
 
@@ -50,7 +50,7 @@ public class BookingSystem extends ViewEvent {
             System.out.println("[" + (i + 1) + "] " + children.get(i));
         }
         
-        System.out.print("Enter a child's name for booking: ");
+        System.out.print("\nEnter a child's index number for booking: ");
         int selectedChildIndex = sc.nextInt();
         if (selectedChildIndex < 1 || selectedChildIndex > children.size()) {
             System.out.println("Invalid selection. Please enter a valid index.");
@@ -105,7 +105,7 @@ public class BookingSystem extends ViewEvent {
         } else {
             System.out.println("Failed to book the tour. Please try again.");
         }
-        sc.close();
+        Home.main(user);
     }
 
     private static void readFile() {
