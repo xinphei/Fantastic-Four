@@ -2,14 +2,13 @@ package assignmentds;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class ViewEvent {
-    private static List<Event> registeredEvents = new ArrayList<>(); // New list to store registered events
+    //private static List<Event> registeredEvents = new ArrayList<>(); // New list to store registered events
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(User user) {
@@ -21,11 +20,11 @@ public class ViewEvent {
         // Only student (role 1) can register for events
         if (user.getRole() == 1) {
             registerForEvents(user); 
+            viewRegisteredEvents(user);
         } else {
             System.out.println();
         }
 
-        viewRegisteredEvents(user, registeredEvents);
         Home.main(user);
     }
     
@@ -136,7 +135,7 @@ public class ViewEvent {
         Event selectedEvent = findEventByTitle(eventTitle);
 
         if (selectedEvent != null) {
-            if (hasConflict(selectedEvent)) {
+            if (hasConflict(user, selectedEvent)) {
                 System.out.println("Error: You have another event registered on the same day.");
             } else {
                 boolean registrationSuccess = DBOperations.registerForEvent(user.getUsername(), 
@@ -152,8 +151,7 @@ public class ViewEvent {
 
                     // Update points in the database
                     DBOperations.updateCurrentPoints(user.getEmail(), update, now);
-                    System.out.println("Your existing points: " + green+ update + reset);
-                    registeredEvents.add(selectedEvent);
+                    System.out.println("Your existing points: " + green + update + reset);
                     System.out.println("Successfully registered: " + selectedEvent.getTitle());
                 }
             }
@@ -174,8 +172,9 @@ public class ViewEvent {
         return null;
     }
 
-    private static boolean hasConflict(Event selectedEvent) {
+    private static boolean hasConflict(User user, Event selectedEvent) {
         // Check the registeredEvents list for conflicts
+        List<Event> registeredEvents = DBOperations.getRegisteredEvents(user.getUsername());
         for (Event event : registeredEvents) {
             if (event.getDate().isEqual(selectedEvent.getDate())) {
                 return true;
@@ -184,7 +183,7 @@ public class ViewEvent {
         return false;
     }
 
-    private static void viewRegisteredEvents(User user, List<Event> parentRegisteredEvents) {
+    private static void viewRegisteredEvents(User user) {
         System.out.println(" __                              __       _ _           __            _     _                    _   _ \n" +
                 "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    /__\\ ___  __ _(_)___| |_ ___ _ __ ___  __| | / \\\n" +
                 "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / \\/// _ \\/ _` | / __| __/ _ \\ '__/ _ \\/ _` |/  /\n" +
@@ -193,10 +192,11 @@ public class ViewEvent {
                 "                                              |___/             |___/                                  ");
 
         System.out.println("Total points gained: " + user.getCurrentPoints());
-        if (parentRegisteredEvents.isEmpty()) {
-            System.out.println("No events registered by parents.");
+        List<Event> registeredEvents = DBOperations.getRegisteredEvents(user.getUsername());
+        if (registeredEvents.isEmpty()) {
+            System.out.println("No events registered by parents.");         
         } else {
-            for (Event event : parentRegisteredEvents) {
+            for (Event event : registeredEvents) {
                 System.out.println(event);
             }
         }

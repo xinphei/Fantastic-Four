@@ -188,6 +188,33 @@ public class DBOperations {
         }
         return false;
     }
+    
+    public static List<Event> getRegisteredEvents(String username) {
+        List<Event> registeredEvents = new ArrayList<>();
+        String query = "SELECT e.* FROM userdb.events e " +
+                       "JOIN userdb.eventregistrations er ON e.event_title = er.event_title " +
+                       "WHERE er.username = ?";
+        try (Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Event event = new Event(
+                        resultSet.getString("event_title"),
+                        resultSet.getString("description"),
+                        resultSet.getString("venue"),
+                        resultSet.getDate("event_date").toLocalDate(),
+                        resultSet.getTime("start_time").toLocalTime(),
+                        resultSet.getTime("end_time").toLocalTime()
+                );
+                registeredEvents.add(event);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return registeredEvents;
+    }
+
 
     private static boolean userAlreadyRegistered(String username, String eventTitle) {
         String query = "SELECT COUNT(*) FROM userdb.eventregistrations WHERE username = ? AND event_title = ?";
