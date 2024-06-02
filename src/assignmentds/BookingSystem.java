@@ -50,13 +50,20 @@ public class BookingSystem extends ViewEvent {
             System.out.println("[" + (i + 1) + "] " + children.get(i));
         }
         
-        System.out.print("\nEnter a child's index number for booking: ");
-        int selectedChildIndex = sc.nextInt();
-        if (selectedChildIndex < 1 || selectedChildIndex > children.size()) {
-            System.out.println("Invalid selection. Please enter a valid index.");
-            return;
-        }
-
+        int selectedChildIndex;
+        boolean isValidC = false;
+        do{
+            System.out.print("\nEnter a child's index number for booking: ");
+            selectedChildIndex = sc.nextInt();
+            if (selectedChildIndex < 1 || selectedChildIndex > children.size()) {
+                System.out.println("Invalid selection. Please enter a valid index.");
+            }
+            else{
+                isValidC = true;
+            }
+        }while(!isValidC);
+        
+       
         String selectedChild = children.get(selectedChildIndex - 1);
 
         // Get available dates for booking
@@ -68,30 +75,47 @@ public class BookingSystem extends ViewEvent {
         }
         
         // Prompt user to select a date for booking
-        System.out.print("\nEnter a date for booking (choose from 1 to " + availableDates.size() + "): ");
-        int selectedDateIndex = sc.nextInt();
-        if (selectedDateIndex < 1 || selectedDateIndex > availableDates.size()) {
-            System.out.println("Invalid date selection. Please choose a valid date.");
-            return;
-        }
+        int selectedDateIndex;
+        boolean isValidD = false;
+        do{
+            System.out.print("\nEnter a date for booking (choose from 1 to " + availableDates.size() + "): ");
+            selectedDateIndex = sc.nextInt();
+            if (selectedDateIndex < 1 || selectedDateIndex > availableDates.size()) {
+                System.out.println("Invalid date selection. Please choose a valid date.");
+
+            }
+            else{
+                isValidD = true;
+            }
+        }while(!isValidD);
+        
+
         
         // Get the selected date
         LocalDate selectedDate = availableDates.get(selectedDateIndex - 1);
 
         // Prompt user to select a destination
-        System.out.print("Enter destination ID for booking: ");
-        int selectedDestinationId = sc.nextInt();
-        if (selectedDestinationId < 1 || selectedDestinationId > filteredDestinations.size()) {
-            System.out.println("Invalid destination ID. Please enter a valid ID.");
-            return;
-        }
+        int selectedDestinationId;
+        boolean isValidID = false;
+        do{
+            System.out.print("Enter destination ID for booking: ");
+            selectedDestinationId = sc.nextInt();
+            if (selectedDestinationId < 1 || selectedDestinationId > 5) {
+                System.out.println("Invalid destination ID. Please enter a valid ID.");
+                
+            }
+            else{
+                isValidID = true;
+            }
+        }while(!isValidID);
+        
 
         Destination selectedDestination = filteredDestinations.get(selectedDestinationId - 1);
         System.out.println("=========================================================================");
         System.out.println("\nSelected booking for: " + selectedDestination.getName() + " for child " + selectedChild);
 
         // Book the tour
-        boolean bookingSuccess = DBOperations.bookATour(selectedChild, selectedDestination.getName(), selectedDate.toString());
+        boolean bookingSuccess = DBOperations.bookATour(selectedChild, selectedDestination.getName(), selectedDate.toString(), user);
         if (bookingSuccess) {
             System.out.println("\nBooking confirmed for " + selectedDestination.getName() + " on " + selectedDate + " for child " + selectedChild);
 

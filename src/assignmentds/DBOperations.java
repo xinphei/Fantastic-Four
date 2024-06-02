@@ -362,7 +362,7 @@ public class DBOperations {
     }
 
     // GET AVAILABLE DATE FOR PARENT TO BOOK SLOT FOR A TOUR (CHECK DB ID CLASH WITH ANY EVENT OR OTHER TOUR)
-    public static List<LocalDate> getAvailableDates(String username) {
+    public static List<LocalDate> getAvailableDates(String childUsername) {
         LocalDate today = LocalDate.now();
         List<LocalDate> availableDates = new ArrayList<>();
 
@@ -370,17 +370,17 @@ public class DBOperations {
         String clashQuery = "SELECT 1 FROM (" +
                 "SELECT event_date FROM userdb.eventregistrations WHERE username = ? " +
                 "UNION " +
-                "SELECT tour_date AS event_date FROM userdb.tourbookings WHERE username = ?" +
+                "SELECT tour_date AS event_date FROM userdb.tourbookings WHERE child_username = ?" +
                 ") AS combined WHERE event_date = ?";
 
         try (Connection conn = DBOperations.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(clashQuery)) {
+            PreparedStatement pstmt = conn.prepareStatement(clashQuery)) {
 
             // Check each of the next seven days
             for (int i = 0; i < 7; i++) {
                 LocalDate checkDate = today.plusDays(i);
-                pstmt.setString(1, username);
-                pstmt.setString(2, username);
+                pstmt.setString(1, childUsername);
+                pstmt.setString(2, childUsername);
                 pstmt.setDate(3, java.sql.Date.valueOf(checkDate));
 
                 ResultSet resultSet = pstmt.executeQuery();
@@ -397,16 +397,17 @@ public class DBOperations {
     }
 
     // BOOK TOUR METHOD (BASED ON THE DATE SELECTION FROM THE METHOD getAvailableDates)
-    public static boolean bookATour(String childUsername, String destination, String date) {
+    public static boolean bookATour(String childUsername, String destination, String date, User user) {
         LocalDate date1 = LocalDate.parse(date);
         java.sql.Date sqlDate = java.sql.Date.valueOf(date1);
         try {
-            String query = "INSERT INTO userdb.tourbookings (username, destination, tour_date) VALUES (?, ?, ?)";
+            String query = "INSERT INTO userdb.tourbookings (child_username, destination, tour_date, parent_username) VALUES (?, ?, ?, ?)";
             Connection conn = getConnection();
             PreparedStatement psptm = conn.prepareStatement(query);
             psptm.setString(1, childUsername);
             psptm.setString(2, destination);
             psptm.setDate(3, sqlDate);
+            psptm.setString(4, user.getUsername());
             
             // Execute the query
             int rowsAffected = psptm.executeUpdate();
@@ -424,6 +425,8 @@ public class DBOperations {
         }
         return false;
     }
+    
+    
     
     // FRIEND MANAGEMENT
     public static LinkedList<User> fetchAllStudentsExcept(String currentUsername) {

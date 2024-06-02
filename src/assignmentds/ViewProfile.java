@@ -55,7 +55,7 @@ public class ViewProfile {
                             break;
                         case 2: // Parents
                             System.out.println("Past Bookings: ");
-                            displayPastBookings(user.getPastBookings());
+                            displayChildrensPastBookings(user.getUsername());
                             System.out.println("Children: ");
                             displayChildren(ParentChildRelationship.loadChildren(user.getUsername()));
                             break;
@@ -251,22 +251,37 @@ public class ViewProfile {
         }
     }
     
-    
-    // Method to display past bookings
-    private static void displayPastBookings(List<BookingSystem> pastBookings) {
-    if (pastBookings == null || pastBookings.isEmpty()) {
-        System.out.println("No past bookings available.");
-        return;
-    }
+    private static void displayChildrensPastBookings(String parentUsername) {
+        List<String> childrenUsernames = ParentChildRelationship.loadChildren(parentUsername);
 
-    for (BookingSystem booking : pastBookings) {
-        if (booking != null) {
-            System.out.println("- Destination: " + booking.getDestination().getName());
-            System.out.println("  Date: " + booking.getDate());
-            System.out.println("");
+        for (String childUsername : childrenUsernames) {
+            System.out.println("\nPast Bookings for Child: " + childUsername);
+            displayPastBookingsForChild(parentUsername, childUsername);
         }
     }
-}
+
+    // Method to display past bookings for a specific child belonging to the parent
+    private static void displayPastBookingsForChild(String parentUsername, String childUsername) {
+        String query = "SELECT destination, tour_date FROM userdb.tourbookings WHERE parent_username = ? AND child_username = ? AND tour_date < CURDATE()";
+        try (Connection conn = DBOperations.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, parentUsername);
+            pstmt.setString(2, childUsername);
+            ResultSet rs = pstmt.executeQuery();
+            boolean hasBookings = false;
+            while (rs.next()) {
+                hasBookings = true;
+                String destination = rs.getString("destination");
+                String tourDate = rs.getString("tour_date");
+                System.out.println("- Destination: " + destination + ", Date: " + tourDate);
+            }
+            if (!hasBookings) {
+                System.out.println("No past bookings found for child: " + childUsername);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching past bookings for child: " + e.getMessage());
+        }
+    }
 }
 
 
