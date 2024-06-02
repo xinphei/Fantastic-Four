@@ -190,8 +190,6 @@ public class ViewEvent {
                 "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | / _  \\  __/ (_| | \\__ \\ ||  __/ | |  __/ (_| /\\_/ \n" +
                 "\\__/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, | \\/ \\_/\\___|\\__, |_|___/\\__\\___|_|  \\___|\\__,_\\/   \n" +
                 "                                              |___/             |___/                                  ");
-
-        System.out.println("Total points gained: " + user.getCurrentPoints());
         List<Event> registeredEvents = DBOperations.getRegisteredEvents(user.getUsername());
         if (registeredEvents.isEmpty()) {
             System.out.println("No events registered by parents.");         
