@@ -25,6 +25,8 @@ public class BookingSystem extends ViewEvent {
         String reset = "\u001B[0m";
         String blue = "\u001B[34m";
         String magenta = "\u001B[35m";
+        String orange = "\u001B[38;5;214m";
+        
         Scanner sc = new Scanner(System.in);
         readFile();
 
@@ -56,7 +58,7 @@ public class BookingSystem extends ViewEvent {
         int selectedChildIndex;
         boolean isValidC = false;
         do{
-            System.out.print("\nEnter a child's index number for booking: ");
+            System.out.print(orange + "\nEnter a child's index number for booking: " + reset);
             selectedChildIndex = sc.nextInt();
             if (selectedChildIndex < 1 || selectedChildIndex > children.size()) {
                 System.out.println("Invalid selection. Please enter a valid index.");
@@ -81,7 +83,7 @@ public class BookingSystem extends ViewEvent {
         int selectedDateIndex;
         boolean isValidD = false;
         do{
-            System.out.print("\nEnter a date for booking (choose from 1 to " + availableDates.size() + "): ");
+            System.out.print(orange + "\nEnter a date for booking (choose from 1 to " + availableDates.size() + "): " + reset);
             selectedDateIndex = sc.nextInt();
             if (selectedDateIndex < 1 || selectedDateIndex > availableDates.size()) {
                 System.out.println("Invalid date selection. Please choose a valid date.");
@@ -101,7 +103,7 @@ public class BookingSystem extends ViewEvent {
         int selectedDestinationId;
         boolean isValidID = false;
         do{
-            System.out.print("Enter destination ID for booking: ");
+            System.out.print(orange + "Enter destination ID for booking: " + reset);
             selectedDestinationId = sc.nextInt();
             if (selectedDestinationId < 1 || selectedDestinationId > 5) {
                 System.out.println("Invalid destination ID. Please enter a valid ID.");
@@ -115,19 +117,20 @@ public class BookingSystem extends ViewEvent {
 
         Destination selectedDestination = filteredDestinations.get(selectedDestinationId - 1);
         System.out.println("=========================================================================");
-        System.out.println("\nSelected booking for: " + selectedDestination.getName() + " for child " + selectedChild);
+        System.out.println("\nSelected booking for: " + magenta + selectedDestination.getName() + reset + " for child " + magenta + selectedChild + reset);
 
         // Book the tour
         boolean bookingSuccess = DBOperations.bookATour(selectedChild, selectedDestination.getName(), selectedDate.toString(), user);
         if (bookingSuccess) {
-            System.out.println("\nBooking confirmed for " + selectedDestination.getName() + " on " + selectedDate + " for child " + selectedChild);
+            System.out.println("\nBooking confirmed for " + magenta + selectedDestination.getName() + reset + " on " 
+                    + magenta + selectedDate + reset + " for child " + magenta + selectedChild + reset);
 
-        System.out.println(blue + "                                  __       _ _         _                 _            _   _ \n" +
-                " ___ _   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _  | |__   ___   ___ | | _____  __| | / \\\n" +
-                "/ __| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | | | '_ \\ / _ \\ / _ \\| |/ / _ \\/ _` |/  /\n" +
-                "\\__ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | | |_) | (_) | (_) |   <  __/ (_| /\\_/ \n" +
-                "|___/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, | |_.__/ \\___/ \\___/|_|\\_\\___|\\__,_\\/   \n" +
-                "                                               |___/                                        ");
+        System.out.println(magenta + "                                  __       _ _         _                 _            _   _ \n" +
+                magenta + " ___ _   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _  | |__   ___   ___ | | _____  __| | / \\\n" +
+                magenta + "/ __| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | | | '_ \\ / _ \\ / _ \\| |/ / _ \\/ _` |/  /\n" +
+                magenta + "\\__ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | | |_) | (_) | (_) |   <  __/ (_| /\\_/ \n" +
+                magenta + "|___/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, | |_.__/ \\___/ \\___/|_|\\_\\___|\\__,_\\/   \n" +
+                magenta + "                                               |___/                                        ");
 
         } else {
             System.out.println("Failed to book the tour. Please try again.");
@@ -172,11 +175,11 @@ public class BookingSystem extends ViewEvent {
         String reset = "\u001B[0m";
         String blue = "\u001B[34m";
         System.out.println(blue + "   ___             _    _                 ___                   \n" +
-                "  / __\\ ___   ___ | | _(_)_ __   __ _    / _ \\__ _  __ _  ___ _ \n" +
-                " /__\\/// _ \\ / _ \\| |/ / | '_ \\ / _` |  / /_)/ _` |/ _` |/ _ (_)\n" +
-                "/ \\/  \\ (_) | (_) |   <| | | | | (_| | / ___/ (_| | (_| |  __/_ \n" +
-                "\\_____/\\___/ \\___/|_|\\_\\_|_| |_|\\__, | \\/    \\__,_|\\__, |\\___(_)\n" +
-                "                                |___/              |___/ ");
+                blue + "  / __\\ ___   ___ | | _(_)_ __   __ _    / _ \\__ _  __ _  ___ _ \n" +
+                blue + " /__\\/// _ \\ / _ \\| |/ / | '_ \\ / _` |  / /_)/ _` |/ _` |/ _ (_)\n" +
+                blue + "/ \\/  \\ (_) | (_) |   <| | | | | (_| | / ___/ (_| | (_| |  __/_ \n" +
+                blue + "\\_____/\\___/ \\___/|_|\\_\\_|_| |_|\\__, | \\/    \\__,_|\\__, |\\___(_)\n" +
+                blue + "                                |___/              |___/ ");
         for (int i = 0; i < 5; i++) {
             Destination destination = destinations.get(i);
             System.out.println("[" + (i + 1) + "] " + destination.getName());

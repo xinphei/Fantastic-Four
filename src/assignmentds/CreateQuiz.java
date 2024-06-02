@@ -26,11 +26,11 @@ public class CreateQuiz {
         String cyan = "\u001B[36m";
         String magenta = "\u001B[35m";
         System.out.println(blue + "   ___               _           ____       _         ___                   \n" +
-                "  / __\\ __ ___  __ _| |_ ___    /___ \\_   _(_)____   / _ \\__ _  __ _  ___ _ \n" +
-                " / / | '__/ _ \\/ _` | __/ _ \\  //  / / | | | |_  /  / /_)/ _` |/ _` |/ _ (_)\n" +
-                "/ /__| | |  __/ (_| | ||  __/ / \\_/ /| |_| | |/ /  / ___/ (_| | (_| |  __/_ \n" +
-                "\\____/_|  \\___|\\__,_|\\__\\___| \\___,_\\ \\__,_|_/___| \\/    \\__,_|\\__, |\\___(_)\n" +
-                "                                                               |___/        ");
+                blue + "  / __\\ __ ___  __ _| |_ ___    /___ \\_   _(_)____   / _ \\__ _  __ _  ___ _ \n" +
+                blue + " / / | '__/ _ \\/ _` | __/ _ \\  //  / / | | | |_  /  / /_)/ _` |/ _` |/ _ (_)\n" +
+                blue + "/ /__| | |  __/ (_| | ||  __/ / \\_/ /| |_| | |/ /  / ___/ (_| | (_| |  __/_ \n" +
+                blue + "\\____/_|  \\___|\\__,_|\\__\\___| \\___,_\\ \\__,_|_/___| \\/    \\__,_|\\__, |\\___(_)\n" +
+                blue + "                                                               |___/        ");
 
         Quiz.initializeQuiz();
         Scanner sc = new Scanner(System.in);
@@ -38,16 +38,16 @@ public class CreateQuiz {
 
         while (createAnotherQuiz) {
             // Prompt user for quiz information
-            System.out.println(cyan + "What's the title of the quiz? ");
+            System.out.println(cyan + "What's the title of the quiz? " + reset);
             String title = sc.nextLine();
 
-            System.out.println(cyan + "What's the description of the quiz? ");
+            System.out.println(cyan + "What's the description of the quiz? "  + reset);
             String description = sc.nextLine();
 
             String theme = null;
             boolean validTheme = false;
             while (!validTheme) {
-                System.out.println(cyan + "What's the theme of the quiz? (Science, Technology, Engineering, Mathematics)");
+                System.out.println(cyan + "What's the theme of the quiz? (Science, Technology, Engineering, Mathematics)" + reset);
                 theme = sc.nextLine();
                 validTheme = isValidTheme(theme);
                 if (!validTheme) {
@@ -58,7 +58,7 @@ public class CreateQuiz {
             String quizizzLink = null;
             boolean validLink = false;
             while (!validLink) {
-                System.out.println(cyan + "What's the Quizizz link? ");
+                System.out.println(cyan + "What's the Quizizz link? " + reset);
                 quizizzLink = sc.nextLine();
                 validLink = isValidURL(quizizzLink);
                 if (!validLink) {
@@ -71,15 +71,15 @@ public class CreateQuiz {
             numQuizCreated++;
 
             System.out.println(magenta + " __                              __       _ _                             _           _   _ \n" +
-                    "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    ___ _ __ ___  __ _| |_ ___  __| | / \\\n" +
-                    "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / __| '__/ _ \\/ _` | __/ _ \\/ _` |/  /\n" +
-                    "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | | (__| | |  __/ (_| | ||  __/ (_| /\\_/ \n" +
-                    "\\__/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, |  \\___|_|  \\___|\\__,_|\\__\\___|\\__,_\\/   \n" +
-                    "                                              |___/                                         \n");
+                    magenta + "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    ___ _ __ ___  __ _| |_ ___  __| | / \\\n" +
+                    magenta + "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / __| '__/ _ \\/ _` | __/ _ \\/ _` |/  /\n" +
+                    magenta + "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | | (__| | |  __/ (_| | ||  __/ (_| /\\_/ \n" +
+                    magenta  +"\\__/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, |  \\___|_|  \\___|\\__,_|\\__\\___|\\__,_\\/   \n" +
+                    magenta + "                                              |___/                                         \n");
             System.out.println(Quiz.getQuizzes().get(Quiz.getQuizzes().size() - 1).toString());
 
             // Ask if the user wants to create another quiz
-            System.out.println("Do you want to create another quiz? (yes/no): ");
+            System.out.println(reset + "Do you want to create another quiz? (yes/no): " + reset);
             String input = sc.nextLine();
             createAnotherQuiz = input.equalsIgnoreCase("yes");
         }

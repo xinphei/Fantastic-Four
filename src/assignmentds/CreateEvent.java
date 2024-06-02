@@ -18,11 +18,11 @@ public class CreateEvent {
         String blue = "\u001B[34m";
         String magenta = "\u001B[35m";
         System.out.println(blue + "   ___               _           __                 _       ___                   \n" +
-                           "  / __\\ __ ___  __ _| |_ ___    /__\\_   _____ _ __ | |_    / _ \\__ _  __ _  ___ _ \n" +
-                           " / / | '__/ _ \\/ _` | __/ _ \\  /_\\ \\ \\ / / _ \\ '_ \\| __|  / /_)/ _` |/ _` |/ _ (_)\n" +
-                           "/ /__| | |  __/ (_| | ||  __/ //__  \\ V /  __/ | | | |_  / ___/ (_| | (_| |  __/_ \n" +
-                           "\\____/_|  \\___|\\__,_|\\__\\___| \\__/   \\_/ \\___|_| |_|\\__| \\/    \\__,_|\\__, |\\___(_)\n" +
-                           "                                                                     |___/        ");
+                           blue + "  / __\\ __ ___  __ _| |_ ___    /__\\_   _____ _ __ | |_    / _ \\__ _  __ _  ___ _ \n" +
+                           blue + " / / | '__/ _ \\/ _` | __/ _ \\  /_\\ \\ \\ / / _ \\ '_ \\| __|  / /_)/ _` |/ _` |/ _ (_)\n" +
+                           blue + "/ /__| | |  __/ (_| | ||  __/ //__  \\ V /  __/ | | | |_  / ___/ (_| | (_| |  __/_ \n" +
+                           blue + "\\____/_|  \\___|\\__,_|\\__\\___| \\__/   \\_/ \\___|_| |_|\\__| \\/    \\__,_|\\__, |\\___(_)\n" +
+                           blue + "                                                                     |___/        ");
 
         Event.initializeEvents();
         Scanner sc = new Scanner(System.in);
@@ -42,16 +42,16 @@ public class CreateEvent {
             numEventsCreated++;
 
             System.out.println(magenta + " __                              __       _ _                             _           _   _ \n" +
-                    "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    ___ _ __ ___  __ _| |_ ___  __| | / \\\n" +
-                    "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / __| '__/ _ \\/ _` | __/ _ \\/ _` |/  /\n" +
-                    "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | | (__| | |  __/ (_| | ||  __/ (_| /\\_/ \n" +
-                    "\\__/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, |  \\___|_|  \\___|\\__,_|\\__\\___|\\__,_\\/   \n" +
-                    "                                              |___/                                         \n");
+                    magenta + "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    ___ _ __ ___  __ _| |_ ___  __| | / \\\n" +
+                    magenta + "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / __| '__/ _ \\/ _` | __/ _ \\/ _` |/  /\n" +
+                    magenta + "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | | (__| | |  __/ (_| | ||  __/ (_| /\\_/ \n" +
+                    magenta + "\\__/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, |  \\___|_|  \\___|\\__,_|\\__\\___|\\__,_\\/   \n" +
+                    magenta + "                                              |___/                                         \n");
             // Display the last added event
             System.out.println(Event.getEvents().get(Event.getEvents().size() - 1).toString());
 
             // Ask if the user wants to create another event
-            System.out.println("Do you want to create another event? (yes/no): ");
+            System.out.println(reset + "Do you want to create another event? (yes/no): " + reset);
             String input = sc.nextLine();
             createAnotherEvent = input.equalsIgnoreCase("yes");
         }
@@ -68,21 +68,21 @@ public class CreateEvent {
     private static String getTitle(Scanner sc) {
         String reset = "\u001B[0m";
         String cyan = "\u001B[36m";
-        System.out.println(cyan + "What's the title of the event? ");
+        System.out.println(cyan + "What's the title of the event? " + reset);
         return sc.nextLine();
     }
 
     private static String getDescription(Scanner sc) {
         String reset = "\u001B[0m";
         String cyan = "\u001B[36m";
-        System.out.println(cyan + "What's the event about? ");
+        System.out.println(cyan + "What's the event about? " + reset);
         return sc.nextLine();
     }
 
     private static String getVenue(Scanner sc) {
         String reset = "\u001B[0m";
         String cyan = "\u001B[36m";
-        System.out.println(cyan + "Where will it be held? ");
+        System.out.println(cyan + "Where will it be held? " + reset);
         return sc.nextLine();
     }
 
@@ -93,7 +93,7 @@ public class CreateEvent {
         boolean validDate = false;
         while (!validDate) {
             try {
-                System.out.println(cyan + "When will it be held? (e.g. 2024-12-04) ");
+                System.out.println(cyan + "When will it be held? (e.g. 2024-12-04) " + reset);
                 date = LocalDate.parse(sc.nextLine());
                 validDate = true;
             } catch (DateTimeParseException e) {
@@ -110,7 +110,7 @@ public class CreateEvent {
         boolean validTimes = false;
         while (!validTimes) {
             try {
-                System.out.println(cyan + "What time will it start and end? (e.g. 11:05-13:30) ");
+                System.out.println(cyan + "What time will it start and end? (e.g. 11:05-13:30) " + reset);
                 String[] timeParts = sc.nextLine().split("-");
                 if (timeParts.length != 2) {
                     throw new IllegalArgumentException("Invalid time format. Please enter the time range in HH:MM-HH:MM format.");
