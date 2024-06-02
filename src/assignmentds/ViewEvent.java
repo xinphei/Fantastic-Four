@@ -112,6 +112,9 @@ public class ViewEvent {
     }
 
     private static void registerForEvents(User user) {
+        String reset = "\u001B[0m";
+        String cyan = "\u001B[36m";
+        
         if (user.getRole() != 1) {
             System.out.println("Access denied. Only student can register for events.");
             return;
@@ -120,7 +123,7 @@ public class ViewEvent {
         boolean continueRegistration = true;
 
         while (continueRegistration) {
-            System.out.println("\nWould you like to register for an event? (Y/N)");
+            System.out.println(cyan + "\nWould you like to register for an event? (Y/N)" + reset);
             String choice = scanner.nextLine().toUpperCase();
 
             if (choice.equals("Y")) {
@@ -137,8 +140,10 @@ public class ViewEvent {
     private static void registerForEvent(User user) {
         String green = "\u001B[32m";
         String reset = "\u001B[0m";
+        String cyan = "\u001B[36m";
+        
         int update = user.getCurrentPoints();
-        System.out.println("Enter the event title you want to register for:");
+        System.out.println(cyan + "Enter the event title you want to register for:");
         String eventTitle = scanner.nextLine();
 
         Event selectedEvent = findEventByTitle(eventTitle);
