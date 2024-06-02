@@ -30,13 +30,17 @@ public class ViewEvent {
     
 
     private static void displayLiveEvents() {
-        //Live Event
-        System.out.println("                                    _               _____          _               _ \n" +
+        // ANSI escape codes for color
+        String reset = "\u001B[0m";
+        String blue = "\u001B[34m";
+
+        // Blue color ASCII art for Live Event
+        System.out.println(blue + "                                    _               _____          _               _ \n" +
                 "  /\\  /\\__ _ _ __  _ __   ___ _ __ (_)_ __   __ _  /__   \\___   __| | __ _ _   _  / \\\n" +
                 " / /_/ / _` | '_ \\| '_ \\ / _ \\ '_ \\| | '_ \\ / _` |   / /\\/ _ \\ / _` |/ _` | | | |/  /\n" +
                 "/ __  / (_| | |_) | |_) |  __/ | | | | | | | (_| |  / / | (_) | (_| | (_| | |_| /\\_/ \n" +
                 "\\/ /_/ \\__,_| .__/| .__/ \\___|_| |_|_|_| |_|\\__, |  \\/   \\___/ \\__,_|\\__,_|\\__, \\/   \n" +
-                "            |_|   |_|                       |___/                          |___/   \n");
+                "            |_|   |_|                       |___/                          |___/   " + reset);
 
         List<Event> ongoingEvents = DBOperations.getOngoingEvents();
         if (ongoingEvents.isEmpty()) {
@@ -50,8 +54,12 @@ public class ViewEvent {
 
 
     private static void displayClosestUpcomingEvents() {
+        // ANSI escape codes for color
+        String reset = "\u001B[0m";
+        String blue = "\u001B[34m";
+        String cyan = "\u001B[36m";
         int count = 0;
-        System.out.println("                                 _                 __                 _         \n" +
+        System.out.println(blue + "                                 _                 __                 _         \n" +
                 " /\\ /\\ _ __   ___ ___  _ __ ___ (_)_ __   __ _    /__\\_   _____ _ __ | |_ ___ _ \n" +
                 "/ / \\ \\ '_ \\ / __/ _ \\| '_ ` _ \\| | '_ \\ / _` |  /_\\ \\ \\ / / _ \\ '_ \\| __/ __(_)\n" +
                 "\\ \\_/ / |_) | (_| (_) | | | | | | | | | | (_| | //__  \\ V /  __/ | | | |_\\__ \\_ \n" +
@@ -63,14 +71,14 @@ public class ViewEvent {
         } else {
             for (Event event : upcomingEvents){
                 if (count == 0) {
-                    System.out.println("   ___                             _        _    \n" +
+                    System.out.println(cyan + "   ___                             _        _    \n" +
                             "  | __|   __ __    ___    _ _     | |_     / |   \n" +
                             "  | _|    \\ V /   / -_)  | ' \\    |  _|    | |   \n" +
                             "  |___|   _\\_/_   \\___|  |_||_|   _\\__|   _|_|_  \n" + "_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"| \n" +
                             "\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-' \n");
 
                 } else if (count == 1) {
-                    System.out.println("   ___                             _       ___   \n" +
+                    System.out.println(cyan + "   ___                             _       ___   \n" +
                             "  | __|   __ __    ___    _ _     | |_    |_  )  \n" +
                             "  | _|    \\ V /   / -_)  | ' \\    |  _|    / /   \n" +
                             "  |___|   _\\_/_   \\___|  |_||_|   _\\__|   /___|  \n" +
@@ -78,7 +86,7 @@ public class ViewEvent {
                             "\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-' \n");
 
                 } else if (count == 2) {
-                    System.out.println("   ___                             _       ____  \n" +
+                    System.out.println(cyan + "   ___                             _       ____  \n" +
                             "  | __|   __ __    ___    _ _     | |_    |__ /  \n" +
                             "  | _|    \\ V /   / -_)  | ' \\    |  _|    |_ \\  \n" +
                             "  |___|   _\\_/_   \\___|  |_||_|   _\\__|   |___/  \n" +
@@ -87,7 +95,7 @@ public class ViewEvent {
 
                 } if (event.getDate().equals(LocalDate.of(2024,12,31))) {
                     System.out.println(event);
-                    System.out.println("                                       _                                \n" +
+                    System.out.println(blue + "                                       _                                \n" +
                             " |  _  __ _|_   _ \\  / _   _ _|_   _ _|_  _|_ |_   _  \\  / _   _   _  | \n" +
                             " | (_| _>  |_  (/_ \\/ (/_ | | |_  (_) |    |_ | | (/_  \\/ (/_ (_| |   o \n" +
                             "                                                       /                ");
@@ -184,7 +192,9 @@ public class ViewEvent {
     }
 
     private static void viewRegisteredEvents(User user) {
-        System.out.println(" __                              __       _ _           __            _     _                    _   _ \n" +
+        String reset = "\u001B[0m";
+        String magenta = "\u001B[35m";
+        System.out.println(magenta + " __                              __       _ _           __            _     _                    _   _ \n" +
                 "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    /__\\ ___  __ _(_)___| |_ ___ _ __ ___  __| | / \\\n" +
                 "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / \\/// _ \\/ _` | / __| __/ _ \\ '__/ _ \\/ _` |/  /\n" +
                 "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | / _  \\  __/ (_| | \\__ \\ ||  __/ | |  __/ (_| /\\_/ \n" +

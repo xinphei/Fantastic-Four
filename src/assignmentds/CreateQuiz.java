@@ -21,7 +21,11 @@ public class CreateQuiz {
     }
     
     public static void main(User user) {
-        System.out.println("   ___               _           ____       _         ___                   \n" +
+        String reset = "\u001B[0m";
+        String blue = "\u001B[34m";
+        String cyan = "\u001B[36m";
+        String magenta = "\u001B[35m";
+        System.out.println(blue + "   ___               _           ____       _         ___                   \n" +
                 "  / __\\ __ ___  __ _| |_ ___    /___ \\_   _(_)____   / _ \\__ _  __ _  ___ _ \n" +
                 " / / | '__/ _ \\/ _` | __/ _ \\  //  / / | | | |_  /  / /_)/ _` |/ _` |/ _ (_)\n" +
                 "/ /__| | |  __/ (_| | ||  __/ / \\_/ /| |_| | |/ /  / ___/ (_| | (_| |  __/_ \n" +
@@ -34,16 +38,16 @@ public class CreateQuiz {
 
         while (createAnotherQuiz) {
             // Prompt user for quiz information
-            System.out.println("What's the title of the quiz? ");
+            System.out.println(cyan + "What's the title of the quiz? ");
             String title = sc.nextLine();
 
-            System.out.println("What's the description of the quiz? ");
+            System.out.println(cyan + "What's the description of the quiz? ");
             String description = sc.nextLine();
 
             String theme = null;
             boolean validTheme = false;
             while (!validTheme) {
-                System.out.println("What's the theme of the quiz? (Science, Technology, Engineering, Mathematics)");
+                System.out.println(cyan + "What's the theme of the quiz? (Science, Technology, Engineering, Mathematics)");
                 theme = sc.nextLine();
                 validTheme = isValidTheme(theme);
                 if (!validTheme) {
@@ -54,7 +58,7 @@ public class CreateQuiz {
             String quizizzLink = null;
             boolean validLink = false;
             while (!validLink) {
-                System.out.println("What's the Quizizz link? ");
+                System.out.println(cyan + "What's the Quizizz link? ");
                 quizizzLink = sc.nextLine();
                 validLink = isValidURL(quizizzLink);
                 if (!validLink) {
@@ -66,7 +70,7 @@ public class CreateQuiz {
             
             numQuizCreated++;
 
-            System.out.println(" __                              __       _ _                             _           _   _ \n" +
+            System.out.println(magenta + " __                              __       _ _                             _           _   _ \n" +
                     "/ _\\_   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _    ___ _ __ ___  __ _| |_ ___  __| | / \\\n" +
                     "\\ \\| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | |  / __| '__/ _ \\/ _` | __/ _ \\/ _` |/  /\n" +
                     "_\\ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | | (__| | |  __/ (_| | ||  __/ (_| /\\_/ \n" +

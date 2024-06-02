@@ -22,6 +22,9 @@ public class BookingSystem extends ViewEvent {
     }
 
     public static void main(User user) {
+        String reset = "\u001B[0m";
+        String blue = "\u001B[34m";
+        String magenta = "\u001B[35m";
         Scanner sc = new Scanner(System.in);
         readFile();
 
@@ -119,7 +122,7 @@ public class BookingSystem extends ViewEvent {
         if (bookingSuccess) {
             System.out.println("\nBooking confirmed for " + selectedDestination.getName() + " on " + selectedDate + " for child " + selectedChild);
 
-        System.out.println("                                  __       _ _         _                 _            _   _ \n" +
+        System.out.println(blue + "                                  __       _ _         _                 _            _   _ \n" +
                 " ___ _   _  ___ ___ ___  ___ ___ / _|_   _| | |_   _  | |__   ___   ___ | | _____  __| | / \\\n" +
                 "/ __| | | |/ __/ __/ _ \\/ __/ __| |_| | | | | | | | | | '_ \\ / _ \\ / _ \\| |/ / _ \\/ _` |/  /\n" +
                 "\\__ \\ |_| | (_| (_|  __/\\__ \\__ \\  _| |_| | | | |_| | | |_) | (_) | (_) |   <  __/ (_| /\\_/ \n" +
@@ -166,7 +169,9 @@ public class BookingSystem extends ViewEvent {
     }
 
     private static void displayBookingPage(List<Destination> destinations, LocalDate currentDate) {
-        System.out.println("   ___             _    _                 ___                   \n" +
+        String reset = "\u001B[0m";
+        String blue = "\u001B[34m";
+        System.out.println(blue + "   ___             _    _                 ___                   \n" +
                 "  / __\\ ___   ___ | | _(_)_ __   __ _    / _ \\__ _  __ _  ___ _ \n" +
                 " /__\\/// _ \\ / _ \\| |/ / | '_ \\ / _` |  / /_)/ _` |/ _` |/ _ (_)\n" +
                 "/ \\/  \\ (_) | (_) |   <| | | | | (_| | / ___/ (_| | (_| |  __/_ \n" +
