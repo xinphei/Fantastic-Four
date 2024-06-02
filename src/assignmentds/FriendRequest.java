@@ -8,7 +8,7 @@ public class FriendRequest {
     
     static String reset = "\u001B[0m";
     static String purple_background ="\u001B[45m";
-    static String yellow = "\u001B[33m";
+    static String magenta = "\u001B[35m";
 
     public static void main(User user) {
         User currentUser = user; 
@@ -40,7 +40,7 @@ public class FriendRequest {
 
     private static void displayMenu() {
         System.out.println("");
-        System.out.println(yellow+"  _______   _______    __     _______  _____  ___   ________    ________      ___      ___       __      _____  ___        __       _______    _______  ___      ___   _______  _____  ___  ___________  \n" +
+        System.out.println(magenta+"  _______   _______    __     _______  _____  ___   ________    ________      ___      ___       __      _____  ___        __       _______    _______  ___      ___   _______  _____  ___  ___________  \n" +
         " /\"     \"| /\"      \\  |\" \\   /\"     \"|(\\\"   \\|\"  \\ |\"      \"\\  /\"       )    |\"  \\    /\"  |     /\"\"\\    (\\\"   \\|\"  \\      /\"\"\\     /\" _   \"|  /\"     \"||\"  \\    /\"  | /\"     \"|(\\\"   \\|\"  \\(\"     _   \") \n" +
         "(: ______)|:        | ||  | (: ______)|.\\\\   \\    |(.  ___  :)(:   \\___/      \\   \\  //   |    /    \\   |.\\\\   \\    |    /    \\   (: ( \\___) (: ______) \\   \\  //   |(: ______)|.\\\\   \\    |)__/  \\\\__/  \n" +
         " \\/    |  |_____/   ) |:  |  \\/    |  |: \\.   \\\\  ||: \\   ) || \\___  \\        /\\\\  \\/.    |   /' /\\  \\  |: \\.   \\\\  |   /' /\\  \\   \\/ \\       \\/    |   /\\\\  \\/.    | \\/    |  |: \\.   \\\\  |   \\\\_ /     \n" +
@@ -96,13 +96,13 @@ public class FriendRequest {
 
 
     private static void viewStudentProfile(User student, User currentUser, Scanner scanner) {
-        System.out.println("\nViewing Profile of " + yellow + student.getUsername()+reset);
+        System.out.println("\nViewing Profile of " + magenta + student.getUsername()+reset);
 
         boolean value = true;
 
         do {
             ViewProfile.displayOtherStudentProfile(student);
-            System.out.println("\nSend Friend Request to " + yellow +student.getUsername() + reset);
+            System.out.println("\nSend Friend Request to " + magenta +student.getUsername() + reset);
             System.out.println("1. Yes");
             System.out.println("2. No");
             int response = scanner.nextInt();
@@ -174,7 +174,7 @@ public class FriendRequest {
         DBOperations.acceptFriendRequest(sender, currentUser);
 
         // Print a success message
-        System.out.println(yellow + sender.getUsername() + reset + " is now your friend.");
+        System.out.println(magenta + sender.getUsername() + reset + " is now your friend.");
     }
 
     private static void reject(User currentUser, User sender) {
@@ -182,16 +182,16 @@ public class FriendRequest {
         DBOperations.rejectFriendRequest(sender, currentUser);
 
         // Print a success message
-        System.out.println(yellow + sender.getUsername() +reset + "'s request removed.");
+        System.out.println(magenta + sender.getUsername() +reset + "'s request removed.");
     }
 
     private static void sendFriendRequest(User student, User currentUser) {
         if (currentUser != null) {
             if (DBOperations.isFriend(currentUser.getUsername(), student.getUsername())) {
-                System.out.println("You are already friends with " + yellow + student.getUsername()+reset);
+                System.out.println("You are already friends with " + magenta + student.getUsername()+reset);
             } else {
                 DBOperations.sendFriendRequest(currentUser, student);
-                System.out.println("Friend request sent to " + yellow + student.getUsername()+reset);
+                System.out.println("Friend request sent to " + magenta + student.getUsername()+reset);
             }
         } else {
             System.out.println("Please log in first.");

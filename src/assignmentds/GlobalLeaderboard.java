@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 public class GlobalLeaderboard {
     
     private List<User> users;
-    static String reset = "\u001B[0m";
-    static String blue_background = "\u001B[44m";
 
     public GlobalLeaderboard() {
         this.users = DBOperations.fetchAllUsers();
@@ -55,7 +53,7 @@ public class GlobalLeaderboard {
         " \\_______)  \\_______)\\\"_____/   (_______/(___/    \\___)\\_______)     \\_______)\\_______)(___/    \\___)(________/  \\_______)|__|  \\___)(_______/  \\\"_____/(___/    \\___)|__|  \\___)(________/  \n" +
         "                                                                                                                                                                                             ");
         System.out.println("");
-        System.out.printf("%-20s %s\n", blue_background+"Username", "Current Points"+reset);
+        System.out.printf("%-20s %s\n", "Username", "Current Points");
         System.out.println("");
         for (User user : studentUsers) {
             System.out.printf("%-20s %d\n", user.getUsername(), user.getCurrentPoints());

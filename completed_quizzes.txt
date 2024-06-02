@@ -2,3 +2,5 @@ lotus: Physics Concepts Quiz
 lotus: AFoundation of Astronomy
 lotus: Electrical Engineering Fundamentals
 stefan: Web Development Fundamentals
+yancy: Physics Concepts Quiz
+eazin: Electrical Engineering Fundamentals
