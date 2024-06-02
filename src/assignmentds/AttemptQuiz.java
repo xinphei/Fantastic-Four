@@ -66,15 +66,13 @@ public class AttemptQuiz {
         return completedQuizzes;
     }
     
-    private static void saveCompletedQuizzes(String username, List<String> completedQuizzes) {
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(COMPLETED_QUIZZES_FILE, true))) {
-        for (String quiz : completedQuizzes) {
-            writer.write(username + ": " + quiz + System.lineSeparator());
+    private static void saveCompletedQuiz(String username, String completedQuiz) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(COMPLETED_QUIZZES_FILE, true))) {
+            writer.write(username + ": " + completedQuiz + System.lineSeparator());
+        } catch (IOException e) {
+            System.out.println("Error saving completed quizzes: " + e.getMessage());
         }
-    } catch (IOException e) {
-        System.out.println("Error saving completed quizzes: " + e.getMessage());
     }
-}
 
 
     private static List<String> selectThemes() {
@@ -156,64 +154,58 @@ public class AttemptQuiz {
         boolean continueAttempting = true;
         int update = user.getCurrentPoints();
         String[][] quizInfo = new String[selectedThemes.size() * availableQuizzes.size()][2];
-        
+
         while (continueAttempting) {
             displayQuizzes(selectedThemes, quizInfo);
             System.out.println("\nSelect a quiz to attempt (or type 'done' to finish):");
             String selectedQuizNumber = scanner.nextLine();
-
+    
             if (selectedQuizNumber.equalsIgnoreCase("done")) {
                 continueAttempting = false;
             } else {
-                // Attempt to parse the input as an integer
                 try {
                     int quizNumber = Integer.parseInt(selectedQuizNumber);
-                    // Find the selected quiz by number
-                    if (quizNumber >= 1 && quizNumber <= availableQuizzes.size()) {
-                        Quiz selectedQuiz = null;
-                        int count = 0;
-                        for (Quiz quiz : availableQuizzes) {
-                            if (selectedThemes.contains(quiz.getTheme())) {
-                                count++;
-                                if (count == quizNumber) {
-                                    selectedQuiz = quiz;
-                                    break;
-                                }
+                    int count = 0;
+                    Quiz selectedQuiz = null;
+    
+                    for (Quiz quiz : availableQuizzes) {
+                        if (selectedThemes.contains(quiz.getTheme())) {
+                            count++;
+                            if (count == quizNumber) {
+                                selectedQuiz = quiz;
+                                break;
                             }
                         }
-
-                        if (selectedQuiz != null) {
-                            // Simulate attempting the quiz
-                            System.out.println("Attempting quiz: " + selectedQuiz.getTitle());
-                            // Open the quiz URL in a web browser
-                            openQuizUrl(selectedQuiz.getQuizizzLink());
-                            
-                            // When a quiz is completed:
+                    }
+    
+                    if (selectedQuiz != null) {
+                        System.out.println("Attempting quiz: " + selectedQuiz.getTitle());
+                        openQuizUrl(selectedQuiz.getQuizizzLink());
+    
+                        if (!completedQuizzes.contains(selectedQuiz.getTitle())) {
                             completedQuizzes.add(selectedQuiz.getTitle());
-                            saveCompletedQuizzes(user.getUsername(), completedQuizzes);
-                            
-                            // Award 2 marks to the student
+                            saveCompletedQuiz(user.getUsername(), selectedQuiz.getTitle());
                             System.out.println("Congratulations! You have completed the quiz. You have been awarded 2 marks.");
                             update += 2;
                             Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-
-                            // Update points in the database
+    
                             DBOperations.updateCurrentPoints(user.getEmail(), update, now);
-                            System.out.println("Your existing points: " + green+ update + reset);
+                            System.out.println("Your existing points: " + green + update + reset);
                         } else {
-                            System.out.println("Quiz not found. Please select a valid quiz.");
+                            System.out.println("You have already completed this quiz.");
                         }
                     } else {
-                        System.out.println("Invalid quiz number. Please select a valid quiz number.");
+                        System.out.println("Quiz not found. Please select a valid quiz.");
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Please enter a valid quiz number or 'done'.");
+                   System.out.println("Invalid input. Please enter a valid quiz number or 'done'.");
                 } catch (IOException | URISyntaxException e) {
                     System.out.println("Error opening quiz URL: " + e.getMessage());
                 }
             }
         }
     }
+
 
     private static void openQuizUrl(String url) throws IOException, URISyntaxException {
         if (Desktop.isDesktopSupported()) {

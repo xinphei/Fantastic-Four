@@ -1,6 +1,4 @@
-lotus: Chemistry Equation
-lotus: Chemistry Equation
-lotus: Earth Science Quiz
-stefan: Anatomy and Physiology Quiz
-stefan: Anatomy and Physiology Quiz
-stefan: Chemistry Equation
+lotus: Physics Concepts Quiz
+lotus: AFoundation of Astronomy
+lotus: Electrical Engineering Fundamentals
+stefan: Web Development Fundamentals
