@@ -228,7 +228,7 @@ public class User{
                 System.out.println("Invalid username. Please try again.");
                 System.out.println("-------------------------------------------");
                 continue;
-            }   
+            }
 
             System.out.println("\n//Password rules//");
             System.out.println("At least: ");

@@ -27,7 +27,13 @@ public class DBOperations {
                 System.out.println("Email has already been registered");
                 System.out.println("---------------------------------------------");
                 return false;
-            } else {
+            } if (AuthenticationSystem.isIdentifierRegistered(connection, newUser.getUsername())) {
+                System.out.println("---------------------------------------------");
+                System.out.println("Username has already been registered");
+                System.out.println("---------------------------------------------");
+                return false;
+            }
+            else {
                 statement.setString(1, newUser.getEmail());
                 statement.setString(2, newUser.getUsername());
                 statement.setString(3, newUser.getPassword());
