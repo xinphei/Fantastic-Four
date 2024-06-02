@@ -262,7 +262,7 @@ public class ViewProfile {
 
     // Method to display past bookings for a specific child belonging to the parent
     private static void displayPastBookingsForChild(String parentUsername, String childUsername) {
-        String query = "SELECT destination, tour_date FROM userdb.tourbookings WHERE parent_username = ? AND child_username = ? AND tour_date < CURDATE()";
+        String query = "SELECT destination, tour_date FROM userdb.tourbookings WHERE parent_username = ? AND child_username = ? AND tour_date <= CURDATE()";
         try (Connection conn = DBOperations.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, parentUsername);
