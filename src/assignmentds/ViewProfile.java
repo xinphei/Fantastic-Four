@@ -38,7 +38,12 @@ public class ViewProfile {
             switch (choice) {
                 case '1' :
                     validChoice = true;
-                    System.out.println("Profile Information:");
+                    System.out.println("  ____             __ _ _        ___        __                            _   _             \n" +
+                                       " |  _ \\ _ __ ___  / _(_) | ___  |_ _|_ __  / _| ___  _ __ _ __ ___   __ _| |_(_) ___  _ __  \n" +
+                                       " | |_) | '__/ _ \\| |_| | |/ _ \\  | || '_ \\| |_ / _ \\| '__| '_ ` _ \\ / _` | __| |/ _ \\| '_ \\ \n" +
+                                       " |  __/| | | (_) |  _| | |  __/  | || | | |  _| (_) | |  | | | | | | (_| | |_| | (_) | | | |\n" +
+                                       " |_|   |_|  \\___/|_| |_|_|\\___| |___|_| |_|_|  \\___/|_|  |_| |_| |_|\\__,_|\\__|_|\\___/|_| |_|\n" +
+                                       "                                                                                            ");
                     System.out.println("Email: " + user.getEmail());
                     System.out.println("Username: " + user.getUsername());
                     System.out.println("Role: " + getRoleName(user.getRole()));
@@ -47,20 +52,20 @@ public class ViewProfile {
                     // Additional information based on role
                     switch (user.getRole()) {
                         case 1: // Young Students
-                            System.out.println("Points: " + user.getCurrentPoints());
+                            System.out.println("\nPoints: " + user.getCurrentPoints());
                             System.out.println("Friends: ");
                             displayFriends(user.getFriends());
                             System.out.println("Parents: ");
                             displayParents(ParentChildRelationship.loadParent(user.getUsername()));
                             break;
                         case 2: // Parents
-                            System.out.println("Past Bookings: ");
+                            System.out.println("\nPast Bookings: ");
                             displayChildrensPastBookings(user.getUsername());
-                            System.out.println("Children: ");
+                            System.out.println("\nChildren: ");
                             displayChildren(ParentChildRelationship.loadChildren(user.getUsername()));
                             break;
                         case 3: // Educators
-                            System.out.println("Number of Quizzes Created: " + CreateEvent.getNumEventsCreated(user.getUsername(), user.getRole()));
+                            System.out.println("\nNumber of Quizzes Created: " + CreateEvent.getNumEventsCreated(user.getUsername(), user.getRole()));
                             System.out.println("Number of Events Created: " + CreateQuiz.getNumQuizzesCreated(user.getUsername(), user.getRole()));
                             //MODIFIED BY DY
                             break;
