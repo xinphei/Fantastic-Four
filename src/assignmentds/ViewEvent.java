@@ -1,7 +1,9 @@
 package assignmentds;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -24,9 +26,9 @@ public class ViewEvent {
             displayClosestUpcomingEvents();
         }
 
-        // Only parents (role 2) can register for events
-        if (user.getRole() == 2) {
-            registerForEvents(user); // Only parents can access register for event page
+        // Only student (role 1) can register for events
+        if (user.getRole() == 1) {
+            registerForEvents(user); 
         } else {
             System.out.println();
         }
@@ -140,6 +142,9 @@ public class ViewEvent {
 
 
     private static void registerForEvent(User user) {
+        String green = "\u001B[32m";
+        String reset = "\u001B[0m";
+        int update = user.getCurrentPoints();
         System.out.println("Enter the event title you want to register for:");
         String eventTitle = scanner.nextLine();
 
@@ -155,7 +160,13 @@ public class ViewEvent {
                         selectedEvent.getStartTime().toString(), 
                         selectedEvent.getEndTime().toString());
                 if (registrationSuccess) {
-                    user.setCurrentPoints(user.getCurrentPoints() + 5);
+                    //**user.setCurrentPoints(user.getCurrentPoints() + 5);
+                    update += 5;
+                    Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+
+                    // Update points in the database
+                    DBOperations.updateCurrentPoints(user.getEmail(), update, now);
+                    System.out.println("Your existing points: " + green+ update + reset);
                     registeredEvents.add(selectedEvent);
                     System.out.println("Successfully registered: " + selectedEvent.getTitle());
                 }

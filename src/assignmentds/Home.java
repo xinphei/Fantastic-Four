@@ -54,16 +54,15 @@ public class Home {
                         System.out.println("Access denied. This feature is only accessible to young students.");
                     }
                     break;
-                case '7': // book event
-                    if (user.getRole() == 2) {
+                /*case '7': // book event
+                    if (user.getRole() == 1) {
                         isValidResponse = true;
-                        //RegisterEvent
-//                        BookingSystem.main(user);
+                        ViewEvent.main(user);
                     } else {
-                        System.out.println("Access denied. This feature is only accessible to parents.");
+                        System.out.println("Access denied. This feature is only accessible to students.");
                     }
-                    break;
-                case '8': // create event
+                    break;*/
+                case '7': // create event
                     if (user.getRole() == 3) {
                         isValidResponse = true;
                         CreateEvent.main(user);
@@ -71,7 +70,7 @@ public class Home {
                         System.out.println("Access denied. This feature is only accessible to educators.");
                     }
                     break;
-                case '9': // create quiz
+                case '8': // create quiz
                     if (user.getRole() == 3) {
                         isValidResponse = true;
                         CreateQuiz.main(user);
@@ -123,7 +122,7 @@ public class Home {
             System.out.println("4. Attempt Quiz");
             System.out.println("5. Global Leaderboard");
             System.out.println("6. Friend Requests");
-            System.out.println("7. Register for an Event");// NEED TO MODIFY
+            //System.out.println("7. Register for an Event");// NEED TO MODIFY
         }
 
         if (user.getRole() == 2) {
@@ -134,8 +133,8 @@ public class Home {
 
         if (user.getRole() == 3) {
             System.out.println("***ONLY ACCESSIBLE TO EDUCATORS***");
-            System.out.println("8. Create an Event");
-            System.out.println("9. Create a Quiz");
+            System.out.println("7. Create an Event");
+            System.out.println("8. Create a Quiz");
         }
 
         System.out.println("0. Log Out");

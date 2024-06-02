@@ -10,7 +10,7 @@ public class DBOperations {
 
     private static String url = "jdbc:mysql://localhost:3306/userdb"; //write your own url, user, and password
     private static String DBuser = "root";
-    private static String pw = "password";
+    private static String pw = "2416";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, DBuser, pw);
@@ -78,6 +78,7 @@ public class DBOperations {
         }
     }
 
+    // ATTEMPT QUIZZES
     public static boolean updateCurrentPoints(String email, int newPoints, Timestamp pointLastUpdated) {
         String sql = "UPDATE users SET currentPoints = ?, pointLastUpdated = ? WHERE email = ?";
 
@@ -128,46 +129,7 @@ public class DBOperations {
         return allUsers;
     }
     
-    public static LinkedList<User> fetchAllStudentsExcept(String currentUsername) {
-        LinkedList<User> students = new LinkedList<>();
-        String sql = "SELECT * FROM users WHERE username != ? AND role = 1"; // Assuming role 1 is for students
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, currentUsername);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                User student = extractUserFromResultSet(resultSet);
-                students.add(student);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return students;
-    }
     
-    public static User fetchUserByUsername(String username) {
-        String sql = "SELECT * FROM users WHERE username = ?";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, username);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                String email = resultSet.getString("email");
-                // Fetch other user properties from the result set
-                // For simplicity, I'll assume you have a constructor in your User class
-                // that accepts all necessary properties as arguments
-                String password = resultSet.getString("password");
-                byte[] salt = resultSet.getBytes("salt");
-                int role = resultSet.getInt("role");
-                // Fetch other properties as needed
-                // Create and return a new User object
-                return new User(email, username, password, salt, role, null, 0, null);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null; // Return null if no user found with the given username
-    }
 
     //REGISTER FOR EVENT
     public static boolean registerForEvent(String username, String eventTitle, String eventDate, String startTime, String endTime) {
@@ -244,45 +206,9 @@ public class DBOperations {
         return false;
     }
     
-    public static LinkedList<User> fetchFriendsByUsername(String username) {
-        LinkedList<User> friends = new LinkedList<>();
-        String sql = "SELECT u.* FROM users u JOIN friendships f ON u.username = f.user2 WHERE f.user1 = ? UNION SELECT u.* FROM users u JOIN friendships f ON u.username = f.user1 WHERE f.user2 = ?";
+    
 
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, username);
-            statement.setString(2, username);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                User friend = extractUserFromResultSet(resultSet);
-                friends.add(friend);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return friends;
-    }
-
-    public static boolean isFriend(String username1, String username2) {
-        String query = "SELECT COUNT(*) AS count FROM friendships WHERE (user1 = ? AND user2 = ?) OR (user1 = ? AND user2 = ?)";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, username1);
-            statement.setString(2, username2);
-            statement.setString(3, username2);
-            statement.setString(4, username1);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    int count = resultSet.getInt("count");
-                    return count > 0;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
+    
     // GET THE LIST OF TOP 3 ONGOING EVENT(TODAY)
     public static List<Event> getOngoingEvents() {
         LocalDate today = LocalDate.now();
@@ -454,6 +380,48 @@ public class DBOperations {
         return false;
     }
     
+    // FRIEND MANAGEMENT
+    public static LinkedList<User> fetchAllStudentsExcept(String currentUsername) {
+        LinkedList<User> students = new LinkedList<>();
+        String sql = "SELECT * FROM users WHERE username != ? AND role = 1"; // Assuming role 1 is for students
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, currentUsername);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                User student = extractUserFromResultSet(resultSet);
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+    
+    public static User fetchUserByUsername(String username) {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String email = resultSet.getString("email");
+                // Fetch other user properties from the result set
+                // For simplicity, I'll assume you have a constructor in your User class
+                // that accepts all necessary properties as arguments
+                String password = resultSet.getString("password");
+                byte[] salt = resultSet.getBytes("salt");
+                int role = resultSet.getInt("role");
+                // Fetch other properties as needed
+                // Create and return a new User object
+                return new User(email, username, password, salt, role, null, 0, null);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Return null if no user found with the given username
+    }
+    
     private static User extractUserFromResultSet(ResultSet resultSet) throws SQLException {
         String email = resultSet.getString("email");
         String username = resultSet.getString("username");
@@ -469,7 +437,45 @@ public class DBOperations {
     }
 
 
+    public static boolean isFriend(String username1, String username2) {
+        String query = "SELECT COUNT(*) AS count FROM friendships WHERE (user1 = ? AND user2 = ?) OR (user1 = ? AND user2 = ?)";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username1);
+            statement.setString(2, username2);
+            statement.setString(3, username2);
+            statement.setString(4, username1);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt("count");
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     
+    public static LinkedList<User> fetchFriendsByUsername(String username) {
+        LinkedList<User> friends = new LinkedList<>();
+        String sql = "SELECT u.* FROM users u JOIN friendships f ON u.username = f.user2 WHERE f.user1 = ? UNION SELECT u.* FROM users u JOIN friendships f ON u.username = f.user1 WHERE f.user2 = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, username);
+            statement.setString(2, username);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                User friend = extractUserFromResultSet(resultSet);
+                friends.add(friend);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return friends;
+    }
+
     public static LinkedList<User> fetchFriendRequests(String username) {
         LinkedList<User> friendRequests = new LinkedList<>();
         String sql = "SELECT sender_username FROM friend_requests WHERE recipient_username = ?";
