@@ -148,11 +148,12 @@ public class DBOperations {
 
         // Check for clashes in both event registrations and tour bookings
         String clashChecking = "SELECT 1 FROM ("
-                + "SELECT event_date, start_time, end_time FROM (SELECT event_date, start_time, end_time FROM userdb.eventregistrations WHERE username = ? "
-                + "UNION "
-                + "SELECT tour_date AS event_date, '00:00:00' AS start_time, '23:59:59' AS end_time FROM userdb.tourbookings WHERE username = ?) AS combined "
-                + "AS subquery"
-                + "WHERE event_date = ? AND NOT (end_time <= ? OR start_time >= ?)";
+            + "SELECT event_date, start_time, end_time FROM ("
+            + "SELECT event_date, start_time, end_time FROM userdb.eventregistrations WHERE username = ? "
+            + "UNION "
+            + "SELECT tour_date AS event_date, '00:00:00' AS start_time, '23:59:59' AS end_time FROM userdb.tourbookings WHERE username = ?) AS combined "
+            + ") AS subquery "
+            + "WHERE event_date = ? AND NOT (end_time <= ? OR start_time >= ?)";
 
         try (Connection conn = DBOperations.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(clashChecking)) {

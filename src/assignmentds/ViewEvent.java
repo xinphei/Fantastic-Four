@@ -146,6 +146,7 @@ public class ViewEvent {
                         selectedEvent.getEndTime().toString());
                 if (registrationSuccess) {
                     //**user.setCurrentPoints(user.getCurrentPoints() + 5);
+                    System.out.println("You have been awarded 5 marks.");
                     update += 5;
                     Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
