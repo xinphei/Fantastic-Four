@@ -9,23 +9,15 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ViewEvent {
-    private static List<Event> events = Event.getEvents();
     private static List<Event> registeredEvents = new ArrayList<>(); // New list to store registered events
     private static Scanner scanner = new Scanner(System.in);
-    private static LocalDate currentDate = LocalDate.of(2024, 5, 18); // Current date
 
     public static void main(User user) {
         // Initialize events
         Event.initializeEvents();
-
-        // Display live events and closest upcoming events regardless of user role
-        if (currentDate.equals(LocalDate.of(2024,12,31))) {
-            displayLiveEvents();
-        } else {
-            displayLiveEvents();
-            displayClosestUpcomingEvents();
-        }
-
+        displayLiveEvents();
+        displayClosestUpcomingEvents();
+        
         // Only student (role 1) can register for events
         if (user.getRole() == 1) {
             registerForEvents(user); 

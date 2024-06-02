@@ -10,7 +10,7 @@ public class DBOperations {
 
     private static String url = "jdbc:mysql://localhost:3306/userdb"; //write your own url, user, and password
     private static String DBuser = "root";
-    private static String pw = "2416";
+    private static String pw = "password";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, DBuser, pw);
