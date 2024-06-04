@@ -82,23 +82,19 @@ public class Forum {
 
     private static void printForumMenu() {
         String reset = "\u001B[0m";
-        String red = "\u001B[31m";
-        String headTitle="___    ____ _____   __  __ __  _____ _____ ____  ___   ____       _____   ___   ____  __ __  ___ ___ \n" +
-        "|   \\  |    / ___/  /  ]|  |  |/ ___// ___/|    |/   \\ |    \\     |     | /   \\ |    \\|  |  ||   |   |\n" +
-        "|    \\  |  (   \\_  /  / |  |  (   \\_(   \\_  |  ||     ||  _  |    |   __||     ||  D  )  |  || _   _ |\n" +
-        "|  D  | |  |\\__  |/  /  |  |  |\\__  |\\__  | |  ||  O  ||  |  |    |  |_  |  O  ||    /|  |  ||  \\_/  |\n" +
-        "|     | |  |/  \\ /   \\_ |  :  |/  \\ |/  \\ | |  ||     ||  |  |    |   _] |     ||    \\|  :  ||   |   |\n" +
-        "|     | |  |\\    \\     ||     |\\    |\\    | |  ||     ||  |  |    |  |   |     ||  .  \\     ||   |   |\n" +
-        "|_____||____|\\___|\\____| \\__,_| \\___| \\___||____|\\___/ |__|__|    |__|    \\___/ |__|\\_|\\__,_||___|___|\n" +
-        "                                                                                                      ";
-        System.out.println("\n******************************************************************************************************************************");
-        System.out.println(red + headTitle + reset);
-        System.out.println("******************************************************************************************************************************");
+        String blue = "\u001B[34m";
+        String cyan = "\u001B[36m";
+        System.out.println(blue + "    ___ _                        _                 ___                          \n" +
+                           blue + "   /   (_)___  ___ _   _ ___ ___(_) ___  _ __     / __\\__  _ __ _   _ _ __ ___  \n" +
+                           blue + "  / /\\ / / __|/ __| | | / __/ __| |/ _ \\| '_ \\   / _\\/ _ \\| '__| | | | '_ ` _ \\ \n" +
+                           blue + " / /_//| \\__ \\ (__| |_| \\__ \\__ \\ | (_) | | | | / / | (_) | |  | |_| | | | | | |\n" +
+                           blue + "/___,' |_|___/\\___|\\__,_|___/___/_|\\___/|_| |_| \\/   \\___/|_|   \\__,_|_| |_| |_|\n" +
+                           blue + "                                                                                ");
         System.out.println("1. View Discussion");
         System.out.println("2. Add Post");
         System.out.println("3. Exit");
         System.out.println("-------------------------------------------");
-        System.out.print("Enter your choice: ");
+        System.out.print(cyan + "Enter your choice: " + reset);
     }
 
     private static void viewForum(DiscussionPost[] forumPosts, int forumSize) {
@@ -118,10 +114,13 @@ public class Forum {
     }
 
     private static int addPost(DiscussionPost[] forumPosts, int forumSize, Scanner scanner, User user) {
+        String reset = "\u001B[0m";
+        String blue = "\u001B[34m";
+        String cyan = "\u001B[36m";
         String username = user.getUsername();
         System.out.print("Username: " + username);
 
-        System.out.print("\nEnter your message: ");
+        System.out.print(cyan + "\nEnter your message: " + reset);
         String message = scanner.nextLine(); // Consume the newline character
         message = scanner.nextLine(); // Read the actual message
 

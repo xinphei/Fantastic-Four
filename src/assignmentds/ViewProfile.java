@@ -38,12 +38,13 @@ public class ViewProfile {
             switch (choice) {
                 case '1' :
                     validChoice = true;
-                    System.out.println("  ____             __ _ _        ___        __                            _   _             \n" +
-                                       " |  _ \\ _ __ ___  / _(_) | ___  |_ _|_ __  / _| ___  _ __ _ __ ___   __ _| |_(_) ___  _ __  \n" +
-                                       " | |_) | '__/ _ \\| |_| | |/ _ \\  | || '_ \\| |_ / _ \\| '__| '_ ` _ \\ / _` | __| |/ _ \\| '_ \\ \n" +
-                                       " |  __/| | | (_) |  _| | |  __/  | || | | |  _| (_) | |  | | | | | | (_| | |_| | (_) | | | |\n" +
-                                       " |_|   |_|  \\___/|_| |_|_|\\___| |___|_| |_|_|  \\___/|_|  |_| |_| |_|\\__,_|\\__|_|\\___/|_| |_|\n" +
-                                       "                                                                                            ");
+                    String blue = "\u001B[34m"; 
+                    System.out.println(blue + "   ___            __ _ _         _____        __                            _   _             \n" +
+                                       blue + "  / _ \\_ __ ___  / _(_) | ___    \\_   \\_ __  / _| ___  _ __ _ __ ___   __ _| |_(_) ___  _ __  \n" +
+                                       blue + " / /_)/ '__/ _ \\| |_| | |/ _ \\    / /\\/ '_ \\| |_ / _ \\| '__| '_ ` _ \\ / _` | __| |/ _ \\| '_ \\ \n" +
+                                       blue + "/ ___/| | | (_) |  _| | |  __/ /\\/ /_ | | | |  _| (_) | |  | | | | | | (_| | |_| | (_) | | | |\n" +
+                                       blue + "\\/    |_|  \\___/|_| |_|_|\\___| \\____/ |_| |_|_|  \\___/|_|  |_| |_| |_|\\__,_|\\__|_|\\___/|_| |_|\n" +
+                                       blue + "                                                                                              ");
                     System.out.println("Email: " + user.getEmail());
                     System.out.println("Username: " + user.getUsername());
                     System.out.println("Role: " + getRoleName(user.getRole()));
@@ -200,6 +201,7 @@ public class ViewProfile {
     }
 
     private static void addRelationship(String parentUsername, String childUsername) {
+        String magenta = "\u001B[35m";
         String query = "INSERT INTO userdb.parentchildrelationship (parent_username, child_username) VALUES (?, ?)";
 
         try (Connection conn = DBOperations.getConnection();
@@ -207,15 +209,11 @@ public class ViewProfile {
             preparedStatement.setString(1, parentUsername);
             preparedStatement.setString(2, childUsername);
             preparedStatement.executeUpdate();
-            System.out.println("\n" +
-                    "  _____      _       _   _                 _     _                   _     _          _                                    __       _ _       \n" +
-                    " |  __ \\    | |     | | (_)               | |   (_)                 | |   | |        | |                                  / _|     | | |      \n" +
-                    " | |__) |___| | __ _| |_ _  ___  _ __  ___| |__  _ _ __     __ _  __| | __| | ___  __| |  ___ _   _  ___ ___ ___  ___ ___| |_ _   _| | |_   _ \n" +
-                    " |  _  // _ \\ |/ _` | __| |/ _ \\| '_ \\/ __| '_ \\| | '_ \\   / _` |/ _` |/ _` |/ _ \\/ _` | / __| | | |/ __/ __/ _ \\/ __/ __|  _| | | | | | | | |\n" +
-                    " | | \\ \\  __/ | (_| | |_| | (_) | | | \\__ \\ | | | | |_) | | (_| | (_| | (_| |  __/ (_| | \\__ \\ |_| | (_| (_|  __/\\__ \\__ \\ | | |_| | | | |_| |\n" +
-                    " |_|  \\_\\___|_|\\__,_|\\__|_|\\___/|_| |_|___/_| |_|_| .__/   \\__,_|\\__,_|\\__,_|\\___|\\__,_| |___/\\__,_|\\___\\___\\___||___/___/_|  \\__,_|_|_|\\__, |\n" +
-                    "                                                  | |                                                                                    __/ |\n" +
-                    "                                                  |_|                                                                                   |___/ \n");
+            System.out.println(magenta + "  ___     _      _   _             _    _                _    _        _                            __      _ _      _ \n" +
+                magenta + " | _ \\___| |__ _| |_(_)___ _ _  __| |_ (_)_ __   __ _ __| |__| |___ __| |  ____  _ __ __ ___ ______/ _|_  _| | |_  _| |\n" +
+                magenta + " |   / -_) / _` |  _| / _ \\ ' \\(_-< ' \\| | '_ \\ / _` / _` / _` / -_) _` | (_-< || / _/ _/ -_|_-<_-<  _| || | | | || |_|\n" +
+                magenta + " |_|_\\___|_\\__,_|\\__|_\\___/_||_/__/_||_|_| .__/ \\__,_\\__,_\\__,_\\___\\__,_| /__/\\_,_\\__\\__\\___/__/__/_|  \\_,_|_|_|\\_, (_)\n" +
+                magenta + "                                         |_|                                                                    |__/   ");
         } catch (SQLException e) {
             System.out.println("Insertion failed : " + e.getMessage());
         }

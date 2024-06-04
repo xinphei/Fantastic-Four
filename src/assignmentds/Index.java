@@ -8,24 +8,19 @@ public class Index {
         String reset = "\u001B[0m";
         String green = "\u001B[32m";
         
-        System.out.println(green+" __      __       .__                                  __ ");                 
-        System.out.println(green+"/  \\    /  \\ ____ |  |   ____  ____   _____   ____   _/ ");  
-        System.out.println(green+"\\   \\/\\/   // __ \\|  | _/ ___\\/  _ \\ /     \\_/ __ \\"); 
-        System.out.println(green+ "\\        /\\  ___/|  |_\\  \\__(  <_> )   Y Y  \\  ___/");
-        System.out.println(green+"  \\__/\\  /  \\___  >____/\\___  >____/|__|_|  /\\___  >"); 
-        System.out.println(green+"     \\/       \\/          \\/            \\/     \\/"+ reset);
+        System.out.println(green+" __    __     _                            _                           _    _               _____ _              ___      _                  ");                 
+        System.out.println(green+"/ / /\\ \\ \\___| | ___ ___  _ __ ___   ___  | |_ ___     /\\  /\\__ _  ___| | _(_)_ __   __ _  /__   \\ |__   ___    / __\\   _| |_ _   _ _ __ ___ ");  
+        System.out.println(green+"\\ \\/  \\/ / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\ | __/ _ \\   / /_/ / _` |/ __| |/ / | '_ \\ / _` |   / /\\/ '_ \\ / _ \\  / _\\| | | | __| | | | '__/ _ \\"); 
+        System.out.println(green+ " \\  /\\  /  __/ | (_| (_) | | | | | |  __/ | || (_) | / __  / (_| | (__|   <| | | | | (_| |  / /  | | | |  __/ / /  | |_| | |_| |_| | | |  __/");
+        System.out.println(green+"  \\/  \\/ \\___|_|\\___\\___/|_| |_| |_|\\___|  \\__\\___/  \\/ /_/ \\__,_|\\___|_|\\_\\_|_| |_|\\__, |  \\/   |_| |_|\\___| \\/    \\__,_|\\__|\\__,_|_|  \\___|"); 
+        System.out.println(green+"                                                                                    |___/                                                    ");
 
-        
-        System.out.println("\n................................................................................................................");
-        System.out.println("\t\t\t\t*** Welcome to Hacking the Future ***");
-        System.out.println("................................................................................................................\n");
-        
         
         String response;
         boolean isValidResponse = false;
-        do{
-            // Ask the user whether they have registered
-            System.out.print("Have you registered? (yes/no): ");
+        do{  
+            String cyan = "\u001B[36m";
+            System.out.print(cyan + "Have you registered? (yes/no): " + reset); // Ask the user whether they have registered
             response = scanner.nextLine().toLowerCase(); // Convert to lowercase for case-insensitivity
         
             switch (response) {

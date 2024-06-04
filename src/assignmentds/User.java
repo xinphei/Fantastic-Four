@@ -206,11 +206,17 @@ public class User{
     public static User registerUser(Scanner scanner) {
         do {
             String reset = "\u001B[0m";
+            String blue = "\u001B[34m";
             String cyan = "\u001B[36m";
-            System.out.println("\n\n___________________________________________");
-            System.out.println(cyan +"         ^^^ REGISTRATION PAGE ^^^         "+ reset);
-            System.out.println("___________________________________________");
-            System.out.print("Email: ");
+            System.out.println(blue + "   __            _     _             _   _                 ___                 \n" +
+                           blue + "  /__\\ ___  __ _(_)___| |_ _ __ __ _| |_(_) ___  _ __     / _ \\__ _  __ _  ___ \n" +
+                           blue + " / \\/// _ \\/ _` | / __| __| '__/ _` | __| |/ _ \\| '_ \\   / /_)/ _` |/ _` |/ _ \\\n" +
+                           blue + "/ _  \\  __/ (_| | \\__ \\ |_| | | (_| | |_| | (_) | | | | / ___/ (_| | (_| |  __/\n" +
+                           blue + "\\/ \\_/\\___|\\__, |_|___/\\__|_|  \\__,_|\\__|_|\\___/|_| |_| \\/    \\__,_|\\__, |\\___|\n" +
+                           blue + "           |___/                                                    |___/      ");
+            
+            System.out.println();
+            System.out.print(cyan + "Email: " + reset);
             String email = scanner.nextLine();
 
             if (!AuthenticationSystem.isValidEmail(email)) {
@@ -220,7 +226,7 @@ public class User{
                 continue;
             }
 
-            System.out.print("Username: ");
+            System.out.print(cyan + "Username: " + reset);
             String username = scanner.nextLine();
         
             if (!AuthenticationSystem.isValidUsername(username)) {
@@ -230,14 +236,14 @@ public class User{
                 continue;
             }
 
-            System.out.println("\n//Password rules//");
+            System.out.println("\n***PASSWORD RULES***");
             System.out.println("At least: ");
             System.out.println("1) 8 characters");
             System.out.println("2) 1 capital letter");
             System.out.println("3) 1 small letter");
             System.out.println("4) 1 special character");
             System.out.println("5) 3 number digits");
-            System.out.print("\nPassword: ");
+            System.out.print(cyan + "\nPassword: " + reset);
             String password = scanner.nextLine();
 
             if (!AuthenticationSystem.isValidPassword(password)) {
@@ -257,11 +263,13 @@ public class User{
             // Set user role
             boolean isValidRole = false;
             do{
-                System.out.println("Roles:");
+                System.out.println();
+                System.out.println("ROLES:");
                 System.out.println("1- Young Students");
                 System.out.println("2- Parents");
                 System.out.println("3- Educators");
-                System.out.print("Enter Role Number: ");
+                System.out.println();
+                System.out.print(cyan + "Enter Role Number: " + reset);
                 role = scanner.nextInt();
                 if(role ==1 || role ==2||role ==3){
                     isValidRole = false;
@@ -281,9 +289,13 @@ public class User{
             User newUser = User.createUser(email, username, hashedPassword, salt, role, coordinate, 0, timestamp);
 
             if (newUser != null) {
-                System.out.println("-------------------------------------------");
-                System.out.println("Registration successful!");
-                System.out.println("-------------------------------------------");
+                String magenta = "\u001B[35m";
+                System.out.println(magenta + "  ___          _    _            _   _            ___                       __      _ \n" +
+                           magenta + " | _ \\___ __ _(_)__| |_ _ _ __ _| |_(_)___ _ _   / __|_  _ __ __ ___ ______/ _|_  _| |\n" +
+                           magenta + " |   / -_) _` | (_-<  _| '_/ _` |  _| / _ \\ ' \\  \\__ \\ || / _/ _/ -_|_-<_-<  _| || | |\n" +
+                           magenta + " |_|_\\___\\__, |_/__/\\__|_| \\__,_|\\__|_\\___/_||_| |___/\\_,_\\__\\__\\___/__/__/_|  \\_,_|_|\n" +
+                           magenta + "         |___/                                                                        ");
+                
                 Home.main(newUser);
                 return newUser;
             }

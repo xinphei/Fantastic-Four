@@ -40,19 +40,20 @@ public class FriendRequest {
 
     private static void displayMenu() {
         System.out.println("");
-        System.out.println(magenta+"  _______   _______    __     _______  _____  ___   ________    ________      ___      ___       __      _____  ___        __       _______    _______  ___      ___   _______  _____  ___  ___________  \n" +
-        " /\"     \"| /\"      \\  |\" \\   /\"     \"|(\\\"   \\|\"  \\ |\"      \"\\  /\"       )    |\"  \\    /\"  |     /\"\"\\    (\\\"   \\|\"  \\      /\"\"\\     /\" _   \"|  /\"     \"||\"  \\    /\"  | /\"     \"|(\\\"   \\|\"  \\(\"     _   \") \n" +
-        "(: ______)|:        | ||  | (: ______)|.\\\\   \\    |(.  ___  :)(:   \\___/      \\   \\  //   |    /    \\   |.\\\\   \\    |    /    \\   (: ( \\___) (: ______) \\   \\  //   |(: ______)|.\\\\   \\    |)__/  \\\\__/  \n" +
-        " \\/    |  |_____/   ) |:  |  \\/    |  |: \\.   \\\\  ||: \\   ) || \\___  \\        /\\\\  \\/.    |   /' /\\  \\  |: \\.   \\\\  |   /' /\\  \\   \\/ \\       \\/    |   /\\\\  \\/.    | \\/    |  |: \\.   \\\\  |   \\\\_ /     \n" +
-        " // ___)   //      /  |.  |  // ___)_ |.  \\    \\. |(| (___\\ ||  __/  \\\\      |: \\.        |  //  __'  \\ |.  \\    \\. |  //  __'  \\  //  \\ ___  // ___)_ |: \\.        | // ___)_ |.  \\    \\. |   |.  |     \n" +
-        "(:  (     |:  __   \\  /\\  |\\(:      \"||    \\    \\ ||:       :) /\" \\   :)     |.  \\    /:  | /   /  \\\\  \\|    \\    \\ | /   /  \\\\  \\(:   _(  _|(:      \"||.  \\    /:  |(:      \"||    \\    \\ |   \\:  |     \n" +
-        " \\__/     |__|  \\___)(__\\_|_)\\_______) \\___|\\____\\)(________/ (_______/      |___|\\__/|___|(___/    \\___)\\___|\\____\\)(___/    \\___)\\_______)  \\_______)|___|\\__/|___| \\_______) \\___|\\____\\)    \\__|     \n" +
-        "                                                                                                                                                                                                         "+reset);
+        String reset = "\u001B[0m";
+        String blue = "\u001B[34m";
+        String cyan = "\u001B[36m";
+        System.out.println(blue + "   ___     _                _                                                                _   \n" +
+        blue + "  / __\\ __(_) ___ _ __   __| |___    /\\/\\   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_ \n" +
+        blue + " / _\\| '__| |/ _ \\ '_ \\ / _` / __|  /    \\ / _` | '_ \\ / _` |/ _` |/ _ \\ '_ ` _ \\ / _ \\ '_ \\| __|\n" +
+        blue + "/ /  | |  | |  __/ | | | (_| \\__ \\ / /\\/\\ \\ (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_ \n" +
+        blue + "\\/   |_|  |_|\\___|_| |_|\\__,_|___/ \\/    \\/\\__,_|_| |_|\\__,_|\\__, |\\___|_| |_| |_|\\___|_| |_|\\__|\n" +
+        blue + "                                                             |___/                               ");
         System.out.println("\nWelcome to Friends Management System!");
         System.out.println("1. View Other Students");
         System.out.println("2. Manage Friend Requests");
         System.out.println("0. Exit");
-        System.out.print("Enter your option: ");
+        System.out.print(cyan + "Enter your option: " + reset);
     }
 
     public static void viewOtherStudents(User currentUser, Scanner scanner) {
@@ -67,8 +68,10 @@ public class FriendRequest {
                 index++;
             }
         }
-    
-        System.out.print("\nChoose a student to view profile (0 to go back): ");
+        
+        String reset = "\u001B[0m";
+        String cyan = "\u001B[36m";
+        System.out.print(cyan + "\nChoose a student to view profile (0 to go back): " + reset);
         int choice = scanner.nextInt();
         scanner.nextLine(); // Consume the newline
     
@@ -137,13 +140,15 @@ public class FriendRequest {
             System.out.print("Choose the number of the friend request to manage (0 to go back): ");
             int requestNumber = scanner.nextInt();
             scanner.nextLine(); // Consume newline left-over
-
+            
+            String reset = "\u001B[0m";
+            String cyan = "\u001B[36m";
             if (requestNumber > 0 && requestNumber <= friendRequests.size()) {
                 User sender = friendRequests.get(requestNumber - 1);
                 System.out.println("\nSelected friend request from: " + sender.getUsername());
                 System.out.println("1. Accept");
                 System.out.println("2. Reject");
-                System.out.print("Choose an action: ");
+                System.out.print(cyan + "Choose an action: " + reset);
                 int choice = scanner.nextInt();
                 scanner.nextLine(); // Consume newline left-over
 

@@ -11,12 +11,17 @@ public class Login {
         boolean loginSuccessful = true;
         do {
             String reset = "\u001B[0m";
-            String cyan ="\u001B[36m";
-            System.out.println("\n\n___________________________________________");
-            System.out.println(cyan +"             ^^^ LOGIN PAGE ^^^            "+ reset);
-            System.out.println("______"
-                    + "_____________________________________");
-            System.out.print("Email/Username: ");
+            String blue = "\u001B[34m";
+            String cyan = "\u001B[36m";
+            System.out.println(blue + "   __             _           ___                 \n" +
+                           blue + "  / /  ___   __ _(_)_ __     / _ \\__ _  __ _  ___ \n" +
+                           blue + " / /  / _ \\ / _` | | '_ \\   / /_)/ _` |/ _` |/ _ \\\n" +
+                           blue + "/ /__| (_) | (_| | | | | | / ___/ (_| | (_| |  __/\n" +
+                           blue + "\\____/\\___/ \\__, |_|_| |_| \\/    \\__,_|\\__, |\\___|\n" +
+                           blue + "            |___/                      |___/      ");
+            
+            System.out.println();
+            System.out.print(cyan + "Email/Username: " + reset);
             String identifier = scanner.nextLine();
             
             if ("".equals(identifier)) {
@@ -36,15 +41,18 @@ public class Login {
                 continue; // Ask user to log in again
             }
             
-            System.out.print("Password: ");
+            System.out.print(cyan + "Password: " + reset);
             String password = scanner.nextLine();
 
             // Perform authentication using MySQL
             User user = authenticateUser(identifier, password);
             if (user != null) {
-                System.out.println("\n<><><><><><><><><><><><><><><><><><><><>");
-                System.out.println("Congratulations! Login Successful.");
-                System.out.println("<><><><><><><><><><><><><><><><><><><><>");
+                String magenta = "\u001B[35m";
+                System.out.println(magenta + "   ___                        _      _   _              _        ___                       __      _ \n" +
+                           magenta + "  / __|___ _ _  __ _ _ _ __ _| |_ __| | | |   ___  __ _(_)_ _   / __|_  _ __ __ ___ ______/ _|_  _| |\n" +
+                           magenta + " | (__/ _ \\ ' \\/ _` | '_/ _` |  _(_-<_| | |__/ _ \\/ _` | | ' \\  \\__ \\ || / _/ _/ -_|_-<_-<  _| || | |\n" +
+                           magenta + "  \\___\\___/_||_\\__, |_| \\__,_|\\__/__(_) |____\\___/\\__, |_|_||_| |___/\\_,_\\__\\__\\___/__/__/_|  \\_,_|_|\n" +
+                           magenta + "               |___/                              |___/                                              ");
  
                 Home.main(user); //lead to Home to choose what to do
                 break;
