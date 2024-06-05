@@ -10,7 +10,7 @@ public class DBOperations {
 
     private static String url = "jdbc:mysql://localhost:3306/userdb"; //write your own url, user, and password
     private static String DBuser = "root";
-    private static String pw = "0123";
+    private static String pw = "2416";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, DBuser, pw);
@@ -157,7 +157,7 @@ public class DBOperations {
             + "SELECT event_date, start_time, end_time FROM ("
             + "SELECT event_date, start_time, end_time FROM userdb.eventregistrations WHERE username = ? "
             + "UNION "
-            + "SELECT tour_date AS event_date, '00:00:00' AS start_time, '23:59:59' AS end_time FROM userdb.tourbookings WHERE username = ?) AS combined "
+            + "SELECT tour_date AS event_date, '00:00:00' AS start_time, '23:59:59' AS end_time FROM userdb.tourbookings WHERE child_username = ?) AS combined "
             + ") AS subquery "
             + "WHERE event_date = ? AND NOT (end_time <= ? OR start_time >= ?)";
 
