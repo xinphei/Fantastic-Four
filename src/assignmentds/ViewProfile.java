@@ -66,8 +66,8 @@ public class ViewProfile {
                             displayChildren(ParentChildRelationship.loadChildren(user.getUsername()));
                             break;
                         case 3: // Educators
-                            System.out.println("\nNumber of Quizzes Created: " + CreateEvent.getNumEventsCreated(user.getUsername(), user.getRole()));
-                            System.out.println("Number of Events Created: " + CreateQuiz.getNumQuizzesCreated(user.getUsername(), user.getRole()));
+                            System.out.println("\nNumber of Quizzes Created: " + CreateQuiz.getNumQuizzesCreated(user.getUsername(), user.getRole()));
+                            System.out.println("Number of Events Created: " + CreateEvent.getNumEventsCreated(user.getUsername(), user.getRole()));
                             //MODIFIED BY DY
                             break;
                         default:
