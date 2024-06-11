@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class BookingSystem extends ViewEvent {
 
     private static List<Destination> destinations = new ArrayList<>();
-    private static LocalDate currentDate = LocalDate.of(2024, 4, 28);
+    private static LocalDate currentDate = LocalDate.now();
 
     private Destination destination;
     private LocalDate date;
