@@ -165,6 +165,7 @@ public class ViewEvent {
 
                     // Update points in the database
                     DBOperations.updateCurrentPoints(user.getEmail(), update, now);
+                    user.setCurrentPoints(update);
                     System.out.println("Your existing points: " + green + update + reset);
                     System.out.println("Successfully registered: " + selectedEvent.getTitle());
                 }
