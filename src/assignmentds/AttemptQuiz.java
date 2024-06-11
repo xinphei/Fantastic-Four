@@ -192,6 +192,7 @@ public class AttemptQuiz {
                             Timestamp now = Timestamp.valueOf(LocalDateTime.now());
     
                             DBOperations.updateCurrentPoints(user.getEmail(), update, now);
+                            user.setCurrentPoints(update);
                             System.out.println("Your existing points: " + green + update + reset);
                         } else {
                             System.out.println("You have already completed this quiz.");
