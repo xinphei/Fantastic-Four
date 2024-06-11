@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -81,37 +82,45 @@ public class BookingSystem extends ViewEvent {
         }
         
         // Prompt user to select a date for booking
-        int selectedDateIndex;
+        int selectedDateIndex = 0;
         boolean isValidD = false;
-        do{
-            System.out.print(cyan + "\nEnter a date for booking (choose from 1 to " + availableDates.size() + "): " + reset);
-            selectedDateIndex = sc.nextInt();
-            if (selectedDateIndex < 1 || selectedDateIndex > availableDates.size()) {
-                System.out.println("Invalid date selection. Please choose a valid date.");
+        do {
+            try {
+                System.out.print(cyan+"\nEnter a date for booking (choose from 1 to " + availableDates.size() + "): "  + reset);
+                selectedDateIndex = sc.nextInt();
+                
+                if (selectedDateIndex < 1 || selectedDateIndex > availableDates.size()) {
+                    System.out.println("Invalid date selection. Please choose a valid date.");
+                } else {
+                    isValidD = true;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.next(); // Clear the invalid input
+            }
+        } while (!isValidD);
 
-            }
-            else{
-                isValidD = true;
-            }
-        }while(!isValidD);
         
         // Get the selected date
         LocalDate selectedDate = availableDates.get(selectedDateIndex - 1);
 
         // Prompt user to select a destination
-        int selectedDestinationId;
+        int selectedDestinationId = 0;
         boolean isValidID = false;
-        do{
-            System.out.print(cyan + "Enter destination ID for booking: " + reset);
-            selectedDestinationId = sc.nextInt();
-            if (selectedDestinationId < 1 || selectedDestinationId > 5) {
-                System.out.println("Invalid destination ID. Please enter a valid ID.");
-                
+        do {
+            try {
+                System.out.print(cyan + "Enter destination ID for booking: " + reset);
+                selectedDestinationId = sc.nextInt();
+                if (selectedDestinationId < 1 || selectedDestinationId > 5) {
+                    System.out.println("Invalid destination ID. Please enter a valid ID.");
+                } else {
+                    isValidID = true;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.next(); // Clear the invalid input
             }
-            else{
-                isValidID = true;
-            }
-        }while(!isValidID);
+        } while (!isValidID);
         
 
         Destination selectedDestination = filteredDestinations.get(selectedDestinationId - 1);
