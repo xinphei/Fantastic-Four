@@ -1,5 +1,6 @@
 package assignmentds;
 
+import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -99,32 +100,40 @@ public class FriendRequest {
 
 
     private static void viewStudentProfile(User student, User currentUser, Scanner scanner) {
-        System.out.println("\nViewing Profile of " + magenta + student.getUsername()+reset);
+        System.out.println("\nViewing Profile of " + magenta + student.getUsername() + reset);
 
         boolean value = true;
-
         do {
             ViewProfile.displayOtherStudentProfile(student);
-            System.out.println("\nSend Friend Request to " + magenta +student.getUsername() + reset);
+            System.out.println("\nSend Friend Request to " + magenta + student.getUsername() + reset);
             System.out.println("1. Yes");
             System.out.println("2. No");
-            int response = scanner.nextInt();
+            System.out.print("Choose an action (1 or 2): ");
 
-            switch (response) {
-                case 1:
-                    sendFriendRequest(student, currentUser);
-                    value = false;
-                    break;
-                case 2:
-                    value = false;
-                    break;
-                default:
-                    System.out.println("Invalid input.");
-                    value = true;
+            try {
+                int response = scanner.nextInt();
+
+                switch (response) {
+                    case 1:
+                        sendFriendRequest(student, currentUser);
+                        value = false;
+                        break;
+                    case 2:
+                        value = false;
+                        break;
+                    default:
+                        System.out.println("Invalid input.");
+                        value = true;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number (1 or 2).");
+                scanner.next(); // Clear the invalid input
+                value = true; // Continue the loop to prompt again
             }
 
         } while (value);
     }
+
 
     private static void manageFriendRequests(User currentUser, Scanner scanner) {
         // Check if the student has any friend requests
@@ -148,7 +157,7 @@ public class FriendRequest {
                 System.out.println("\nSelected friend request from: " + sender.getUsername());
                 System.out.println("1. Accept");
                 System.out.println("2. Reject");
-                System.out.print(cyan + "Choose an action: " + reset);
+                System.out.print(cyan + "Choose an action (1 or 2): " + reset);
                 int choice = scanner.nextInt();
                 scanner.nextLine(); // Consume newline left-over
 
