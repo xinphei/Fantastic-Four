@@ -5,3 +5,4 @@ stefan: Web Development Fundamentals
 yancy: Physics Concepts Quiz
 eazin: Electrical Engineering Fundamentals
 stefan: AFoundation of Astronomy
+stefan: SPM Physics Recap
